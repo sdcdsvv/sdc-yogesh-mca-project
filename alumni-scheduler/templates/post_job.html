@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+{% block title %}Post a Job - Alumni Event Scheduler{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-4">
+                Post a Job
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Share career opportunities with fellow alumni and help build our professional network.
+            </p>
+        </div>
+
+        <!-- Job Posting Form -->
+        <div class="card-enhanced p-8">
+            <form method="POST" class="space-y-6" id="jobPostForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <!-- Job Title -->
+                <div class="space-y-2">
+                    <label for="title" class="block text-sm font-semibold text-gray-700">
+                        <i class="fas fa-briefcase mr-2 text-green-500"></i>Job Title *
+                    </label>
+                    <input type="text" 
+                           name="title" 
+                           id="title" 
+                           class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+                           placeholder="e.g., Senior Software Engineer"
+                           required>
+                    <div id="title-error" class="text-red-500 text-sm hidden"></div>
+                </div>
+
+                <!-- Company and Location -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="company" class="block text-sm font-semibold text-gray-700">
+                            <i class="fas fa-building mr-2 text-green-500"></i>Company *
+                        </label>
+                        <input type="text" 
+                               name="company" 
+                               id="company" 
+                               class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+                               placeholder="e.g., Tech Corp Inc."
+                               required>
+                        <div id="company-error" class="text-red-500 text-sm hidden"></div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="location" class="block text-sm font-semibold text-gray-700">
+                            <i class="fas fa-map-marker-alt mr-2 text-green-500"></i>Location *
+                        </label>
+                        <input type="text" 
+                               name="location" 
+                               id="location" 
+                               class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+                               placeholder="e.g., San Francisco, CA or Remote"
+                               required>
+                        <div id="location-error" class="text-red-500 text-sm hidden"></div>
+                    </div>
+                </div>
+
+                <!-- Job Type and Apply URL -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="job_type" class="block text-sm font-semibold text-gray-700">
+                            <i class="fas fa-clock mr-2 text-green-500"></i>Job Type *
+                        </label>
+                        <select name="job_type" 
+                                id="job_type" 
+                                class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+                                required>
+                            <option value="">Select job type</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Freelance">Freelance</option>
+                            <option value="Internship">Internship</option>
+                            <option value="Remote">Remote</option>
+                        </select>
+                        <div id="job_type-error" class="text-red-500 text-sm hidden"></div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="apply_url" class="block text-sm font-semibold text-gray-700">
+                            <i class="fas fa-external-link-alt mr-2 text-green-500"></i>Application URL
+                        </label>
+                        <input type="url" 
+                               name="apply_url" 
+                               id="apply_url" 
+                               class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+                               placeholder="https://company.com/careers/apply">
+                        <div id="apply_url-error" class="text-red-500 text-sm hidden"></div>
+                    </div>
+                </div>
+
+                <!-- Job Description -->
+                <div class="space-y-2">
+                    <label for="description" class="block text-sm font-semibold text-gray-700">
+                        <i class="fas fa-file-alt mr-2 text-green-500"></i>Job Description *
+                    </label>
+                    <textarea name="description" 
+                              id="description" 
+                              rows="8"
+                              class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300 resize-vertical"
+                              placeholder="Describe the role, responsibilities, requirements, and benefits..."
+                              required></textarea>
+                    <div class="flex justify-between text-sm text-gray-500">
+                        <span>Include details about the role, requirements, and company culture</span>
+                        <span id="description-count">0 characters</span>
+                    </div>
+                    <div id="description-error" class="text-red-500 text-sm hidden"></div>
+                </div>
+
+                <!-- Posting Guidelines -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                    <h4 class="font-semibold text-blue-800 mb-3">
+                        <i class="fas fa-info-circle mr-2"></i>Posting Guidelines
+                    </h4>
+                    <ul class="space-y-2 text-sm text-blue-700">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-blue-500 mr-2 mt-1"></i>
+                            <span>Ensure the job posting is legitimate and not spam</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-blue-500 mr-2 mt-1"></i>
+                            <span>Provide accurate and detailed job descriptions</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-blue-500 mr-2 mt-1"></i>
+                            <span>Include clear application instructions</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-blue-500 mr-2 mt-1"></i>
+                            <span>Respect equal opportunity employment practices</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-center space-x-4">
+                    <a href="{{ url_for('jobs') }}" 
+                       class="btn-secondary px-8 py-3 rounded-xl font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300">
+                        <i class="fas fa-times mr-2"></i>Cancel
+                    </a>
+                    <button type="submit" 
+                            class="btn-primary px-8 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        <span id="submitText">Post Job</span>
+                        <i class="fas fa-spinner fa-spin ml-2 hidden" id="submitSpinner"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Enhanced form validation and interactions
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('jobPostForm');
+    const titleInput = document.getElementById('title');
+    const companyInput = document.getElementById('company');
+    const locationInput = document.getElementById('location');
+    const jobTypeInput = document.getElementById('job_type');
+    const applyUrlInput = document.getElementById('apply_url');
+    const descriptionInput = document.getElementById('description');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const descriptionCount = document.getElementById('description-count');
+
+    // Real-time validation
+    function validateField(field, validator, errorId) {
+        const value = field.value;
+        const errorElement = document.getElementById(errorId);
+        
+        if (validator(value)) {
+            errorElement.classList.add('hidden');
+            field.classList.remove('border-red-500');
+            field.classList.add('border-gray-300');
+        } else {
+            errorElement.classList.remove('hidden');
+            field.classList.add('border-red-500');
+            field.classList.remove('border-gray-300');
+        }
+    }
+
+    // Title validation
+    titleInput.addEventListener('input', function() {
+        validateField(this, (value) => value.length >= 3, 'title-error');
+    });
+
+    // Company validation
+    companyInput.addEventListener('input', function() {
+        validateField(this, (value) => value.length >= 2, 'company-error');
+    });
+
+    // Location validation
+    locationInput.addEventListener('input', function() {
+        validateField(this, (value) => value.length >= 2, 'location-error');
+    });
+
+    // Job type validation
+    jobTypeInput.addEventListener('change', function() {
+        validateField(this, (value) => value !== '', 'job_type-error');
+    });
+
+    // URL validation
+    applyUrlInput.addEventListener('input', function() {
+        const urlPattern = /^https?:\/\/.+/;
+        validateField(this, (value) => value === '' || urlPattern.test(value), 'apply_url-error');
+    });
+
+    // Description validation and character count
+    descriptionInput.addEventListener('input', function() {
+        const value = this.value;
+        descriptionCount.textContent = `${value.length} characters`;
+        validateField(this, (value) => value.length >= 50, 'description-error');
+    });
+
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        const title = titleInput.value;
+        const company = companyInput.value;
+        const location = locationInput.value;
+        const jobType = jobTypeInput.value;
+        const description = descriptionInput.value;
+        const applyUrl = applyUrlInput.value;
+        
+        // Validate all required fields
+        if (!title || !company || !location || !jobType || !description) {
+            e.preventDefault();
+            return;
+        }
+        
+        // Validate URL if provided
+        if (applyUrl && !/^https?:\/\/.+/.test(applyUrl)) {
+            e.preventDefault();
+            applyUrlInput.focus();
+            return;
+        }
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitText.textContent = 'Posting Job...';
+        submitSpinner.classList.remove('hidden');
+    });
+
+    // Set error messages
+    function setErrorMessage(fieldId, message) {
+        const errorElement = document.getElementById(fieldId);
+        errorElement.textContent = message;
+        errorElement.classList.remove('hidden');
+    }
+
+    // Set up error messages
+    titleInput.addEventListener('blur', function() {
+        if (this.value && this.value.length < 3) {
+            setErrorMessage('title-error', 'Job title must be at least 3 characters long');
+        }
+    });
+
+    companyInput.addEventListener('blur', function() {
+        if (this.value && this.value.length < 2) {
+            setErrorMessage('company-error', 'Company name must be at least 2 characters long');
+        }
+    });
+
+    locationInput.addEventListener('blur', function() {
+        if (this.value && this.value.length < 2) {
+            setErrorMessage('location-error', 'Location must be at least 2 characters long');
+        }
+    });
+
+    jobTypeInput.addEventListener('change', function() {
+        if (this.value === '') {
+            setErrorMessage('job_type-error', 'Please select a job type');
+        }
+    });
+
+    applyUrlInput.addEventListener('blur', function() {
+        if (this.value && !/^https?:\/\/.+/.test(this.value)) {
+            setErrorMessage('apply_url-error', 'Please enter a valid URL starting with http:// or https://');
+        }
+    });
+
+    descriptionInput.addEventListener('blur', function() {
+        if (this.value && this.value.length < 50) {
+            setErrorMessage('description-error', 'Job description must be at least 50 characters long');
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block title %}{{ job.title }} - Alumni Event Scheduler{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Back Button -->
+        <div class="mb-6">
+            <a href="{{ url_for('jobs') }}" 
+               class="inline-flex items-center text-gray-600 hover:text-gray-800 transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Back to Job Board
+            </a>
+        </div>
+
+        <!-- Job Header -->
+        <div class="card-enhanced p-8 mb-8">
+            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between">
+                <div class="flex items-start space-x-6">
+                    <!-- Company Logo -->
+                    <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-blue-500 rounded-xl flex items-center justify-center text-white text-2xl font-bold flex-shrink-0">
+                        {{ job.company[0].upper() }}
+                    </div>
+                    
+                    <!-- Job Title and Company -->
+                    <div class="flex-1">
+                        <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ job.title }}</h1>
+                        <h2 class="text-xl text-gray-600 mb-4">{{ job.company }}</h2>
+                        
+                        <!-- Job Meta Info -->
+                        <div class="flex flex-wrap items-center gap-4 mb-6">
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-map-marker-alt mr-2 text-green-500"></i>
+                                <span class="font-medium">{{ job.location }}</span>
+                            </div>
+                            
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-clock mr-2 text-green-500"></i>
+                                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                                    {{ job.job_type }}
+                                </span>
+                            </div>
+                            
+                            <div class="flex items-center text-gray-600">
+                                <i class="fas fa-calendar mr-2 text-green-500"></i>
+                                <span>Posted {{ job.created_at.strftime('%B %d, %Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Apply Button -->
+                <div class="mt-6 lg:mt-0 lg:ml-6">
+                    {% if job.apply_url %}
+                    <a href="{{ job.apply_url }}" 
+                       target="_blank"
+                       class="btn-primary px-8 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                        <i class="fas fa-external-link-alt mr-2"></i>Apply Now
+                    </a>
+                    {% else %}
+                    <button class="btn-secondary px-8 py-3 rounded-xl font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300">
+                        <i class="fas fa-envelope mr-2"></i>Contact for Application
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Description -->
+        <div class="card-enhanced p-8 mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-file-alt mr-2 text-green-500"></i>Job Description
+            </h3>
+            <div class="prose max-w-none">
+                <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ job.description }}</p>
+            </div>
+        </div>
+
+        <!-- Job Details -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Company Info -->
+            <div class="card-enhanced p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-building mr-2 text-green-500"></i>Company Information
+                </h3>
+                <div class="space-y-3">
+                    <div>
+                        <span class="font-semibold text-gray-700">Company:</span>
+                        <span class="ml-2 text-gray-600">{{ job.company }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-gray-700">Location:</span>
+                        <span class="ml-2 text-gray-600">{{ job.location }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold text-gray-700">Job Type:</span>
+                        <span class="ml-2 px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                            {{ job.job_type }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posted By -->
+            <div class="card-enhanced p-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-user mr-2 text-green-500"></i>Posted By
+                </h3>
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+                        {{ job.posted_by_name[0].upper() }}
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800">{{ job.posted_by_name }}</p>
+                        <p class="text-sm text-gray-600">Alumni Member</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Section -->
+        <div class="card-enhanced p-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-paper-plane mr-2 text-green-500"></i>How to Apply
+            </h3>
+            
+            {% if job.apply_url %}
+            <div class="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+                <div class="flex items-start">
+                    <i class="fas fa-external-link-alt text-green-500 text-xl mr-4 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold text-green-800 mb-2">Apply Online</h4>
+                        <p class="text-green-700 mb-4">Click the button below to apply directly through the company's website.</p>
+                        <a href="{{ job.apply_url }}" 
+                           target="_blank"
+                           class="btn-primary px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
+                            <i class="fas fa-external-link-alt mr-2"></i>Apply Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                <div class="flex items-start">
+                    <i class="fas fa-envelope text-blue-500 text-xl mr-4 mt-1"></i>
+                    <div>
+                        <h4 class="font-semibold text-blue-800 mb-2">Contact for Application</h4>
+                        <p class="text-blue-700 mb-4">This job posting doesn't have a direct application link. Please contact the poster for more information about how to apply.</p>
+                        <button class="btn-secondary px-6 py-3 rounded-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all duration-300">
+                            <i class="fas fa-envelope mr-2"></i>Contact Poster
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Application Tips -->
+            <div class="bg-gray-50 rounded-lg p-6">
+                <h4 class="font-semibold text-gray-800 mb-3">Application Tips</h4>
+                <ul class="space-y-2 text-gray-700">
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Customize your resume to highlight relevant experience for this role</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Write a compelling cover letter that shows your interest in the company</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Research the company and mention specific details in your application</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check text-green-500 mr-2 mt-1"></i>
+                        <span>Follow up after submitting your application</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Related Jobs -->
+        <div class="mt-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-6">
+                <i class="fas fa-briefcase mr-2 text-green-500"></i>More Jobs
+            </h3>
+            <div class="text-center py-8">
+                <p class="text-gray-600 mb-4">Discover more opportunities in our job board</p>
+                <a href="{{ url_for('jobs') }}" 
+                   class="btn-primary px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-search mr-2"></i>Browse All Jobs
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

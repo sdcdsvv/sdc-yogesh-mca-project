@@ -1,0 +1,59 @@
+# Dependencies
+node_modules
+frontend/node_modules
+
+# Environment variables (contains sensitive credentials)
+.env
+backend/.env
+frontend/.env
+*.env
+!.env.example
+!backend/.env.example
+!frontend/.env.example
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+frontend/dist/
+build/
+*.egg-info/
+
+# Uploads (user-generated content)
+backend/uploads/videos/*.mp4
+backend/uploads/videos/*.avi
+backend/uploads/videos/*.mov
+!backend/uploads/videos/.gitkeep
+
+# Logs
+*.log
+logs/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.hypothesis/
+backend/.pytest_cache/
+backend/.hypothesis/

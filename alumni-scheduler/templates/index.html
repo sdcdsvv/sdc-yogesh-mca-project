@@ -1,0 +1,842 @@
+{% extends "base.html" %}
+{% block title %}Alumni Event Scheduler - Stay Connected{% endblock %}
+{% block content %}
+<!-- Seamless Hero Section -->
+<div
+    class="relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 text-gray-900 -mt-6 pt-6">
+    <!-- Subtle Background Pattern -->
+    <div class="absolute inset-0 opacity-30">
+        <div class="absolute inset-0"
+            style="background-image: radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(147, 51, 234, 0.1) 0%, transparent 50%);">
+        </div>
+    </div>
+
+    <!-- Gradient Accent -->
+    <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+
+    <div class="relative px-8 py-16 lg:py-24">
+        <div class="max-w-6xl mx-auto text-center">
+            <!-- Enhanced Logo with Better Integration -->
+            <div class="mb-12">
+                <div
+                    class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl mb-8 gentle-float shadow-lg">
+                    <i class="fas fa-graduation-cap text-white text-5xl"></i>
+                </div>
+            </div>
+
+            <!-- Refined Title -->
+            <div class="mb-8">
+                <h1 class="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                    <span class="block text-gray-800 mb-2">Welcome to</span>
+                    <span
+                        class="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        Alumni Event Scheduler
+                    </span>
+                </h1>
+                <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto rounded-full"></div>
+            </div>
+
+            <!-- Refined Description -->
+            <p class="text-lg md:text-xl mb-12 text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                🎓 Connect with your <span class="font-semibold text-blue-600">alumni community</span>,
+                discover <span class="font-semibold text-purple-600">amazing events</span>, and build
+                <span class="font-semibold text-pink-600">lasting relationships</span>
+            </p>
+
+            <!-- Refined CTA Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+                {% if not get_current_user() %}
+                <a href="{{ url_for('register') }}"
+                    class="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                    <i class="fas fa-rocket mr-2 text-lg"></i>Join Our Community
+                    <div
+                        class="absolute -top-1 -right-1 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs text-gray-900 font-bold animate-bounce">
+                        ✨
+                    </div>
+                </a>
+                <a href="{{ url_for('login') }}"
+                    class="group bg-white border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl text-lg font-semibold hover:border-blue-500 hover:text-blue-600 transition-all duration-300 shadow-md hover:shadow-lg">
+                    <i class="fas fa-sign-in-alt mr-2 group-hover:rotate-12 transition-transform duration-300"></i>Sign
+                    In
+                </a>
+                {% else %}
+                <a href="{{ url_for('events') }}"
+                    class="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
+                    <i
+                        class="fas fa-calendar-star mr-2 text-lg group-hover:rotate-12 transition-transform duration-300"></i>Explore
+                    Events
+                </a>
+                <a href="{{ url_for('alumni_dashboard') }}"
+                    class="group bg-white border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl text-lg font-semibold hover:border-blue-500 hover:text-blue-600 transition-all duration-300 shadow-md">
+                    <i
+                        class="fas fa-tachometer-alt mr-2 group-hover:spin transition-transform duration-500"></i>Dashboard
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Refined Trust Indicators -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <div
+                    class="flex flex-col items-center p-6 bg-white rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 group">
+                    <div
+                        class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-7 h-7 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z" />
+                        </svg>
+                    </div>
+                    <span class="text-lg font-semibold text-gray-900">100% Secure & Private</span>
+                    <span class="text-sm text-gray-600 mt-1">Bank-level encryption</span>
+                </div>
+                <div
+                    class="flex flex-col items-center p-6 bg-white rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 group">
+                    <div
+                        class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-7 h-7 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zM4 18v-4h3v4h2v-7.5c0-.83.67-1.5 1.5-1.5S12 9.67 12 10.5V11h2V9.5c0-1.93-1.57-3.5-3.5-3.5S7 7.57 7 9.5V18H4z" />
+                            <circle cx="6" cy="6" r="2" />
+                            <circle cx="18" cy="6" r="2" />
+                        </svg>
+                    </div>
+                    <span class="text-lg font-semibold text-gray-900">{{ stats.total_users }}+ Active Alumni</span>
+                    <span class="text-sm text-gray-600 mt-1">Growing worldwide</span>
+                </div>
+                <div
+                    class="flex flex-col items-center p-6 bg-white rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 group">
+                    <div
+                        class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                        <svg class="w-7 h-7 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z" />
+                            <path d="M9 10h2v2H9zm4 0h2v2h-2zm4 0h2v2h-2zm-8 4h2v2H9zm4 0h2v2h-2zm4 0h2v2h-2z" />
+                            <path d="M12 6l1.5 3h3l-2.5 2 1 3-3-2-3 2 1-3-2.5-2h3z" />
+                        </svg>
+                    </div>
+                    <span class="text-lg font-semibold text-gray-900">{{ stats.total_events }}+ Events Hosted</span>
+                    <span class="text-sm text-gray-600 mt-1">Memories created</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smooth Transition -->
+    <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-b from-transparent to-white"></div>
+</div>
+
+<!-- Seamless Statistics Section -->
+<div class="mb-20">
+    <div class="text-center mb-12">
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            <span class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Our Impact in Numbers
+            </span>
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+            Join thousands of alumni who are already building meaningful connections
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <!-- Events Stat -->
+        <div
+            class="group relative overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 transform hover:scale-102 border border-blue-200/50">
+            <div
+                class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-indigo-500/20 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700">
+            </div>
+            <div class="relative z-10">
+                <div
+                    class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-500 shadow-xl">
+                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" />
+                    </svg>
+                </div>
+                <div
+                    class="text-3xl md:text-4xl font-bold text-gray-900 mb-3 group-hover:scale-110 transition-transform duration-300">
+                    {{ stats.total_events }}
+                    <span class="text-xl text-blue-600">+</span>
+                </div>
+                <div class="text-lg font-semibold text-gray-800 mb-2">Events Hosted</div>
+                <div class="text-sm text-gray-600 leading-relaxed">Creating unforgettable experiences and lasting
+                    memories for our community</div>
+
+                <!-- Progress Bar -->
+                <div class="mt-4 w-full bg-blue-200 rounded-full h-2">
+                    <div class="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full" style="width: 85%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Stat -->
+        <div
+            class="group relative overflow-hidden bg-gradient-to-br from-emerald-50 to-green-100 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 transform hover:scale-102 border border-emerald-200/50">
+            <div
+                class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-emerald-400/20 to-green-500/20 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700">
+            </div>
+            <div class="relative z-10">
+                <div
+                    class="w-20 h-20 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-500 shadow-xl">
+                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                        <circle cx="18" cy="8" r="2" />
+                        <path d="M18 12c-1.33 0-2.67.33-3.67 1H18v-1z" />
+                    </svg>
+                </div>
+                <div
+                    class="text-3xl md:text-4xl font-bold text-gray-900 mb-3 group-hover:scale-110 transition-transform duration-300">
+                    {{ stats.total_users }}
+                    <span class="text-xl text-emerald-600">+</span>
+                </div>
+                <div class="text-lg font-semibold text-gray-800 mb-2">Active Alumni</div>
+                <div class="text-sm text-gray-600 leading-relaxed">A thriving global community of professionals,
+                    innovators, and changemakers</div>
+
+                <!-- Progress Bar -->
+                <div class="mt-4 w-full bg-emerald-200 rounded-full h-2">
+                    <div class="bg-gradient-to-r from-emerald-500 to-green-600 h-2 rounded-full" style="width: 92%">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Events Stat -->
+        <div
+            class="group relative overflow-hidden bg-gradient-to-br from-purple-50 to-pink-100 rounded-2xl p-8 hover:shadow-lg transition-all duration-300 transform hover:scale-102 border border-purple-200/50">
+            <div
+                class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-400/20 to-pink-500/20 rounded-full -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700">
+            </div>
+            <div class="relative z-10">
+                <div
+                    class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-500 shadow-xl">
+                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                </div>
+                <div
+                    class="text-3xl md:text-4xl font-bold text-gray-900 mb-3 group-hover:scale-110 transition-transform duration-300">
+                    {{ stats.upcoming_events }}
+                    <span class="text-xl text-purple-600">+</span>
+                </div>
+                <div class="text-lg font-semibold text-gray-800 mb-2">Upcoming Events</div>
+                <div class="text-sm text-gray-600 leading-relaxed">Exciting opportunities to connect, learn, and grow
+                    with fellow alumni</div>
+
+                <!-- Progress Bar -->
+                <div class="mt-4 w-full bg-purple-200 rounded-full h-2">
+                    <div class="bg-gradient-to-r from-purple-500 to-pink-600 h-2 rounded-full" style="width: 78%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Stats Row -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-4xl mx-auto">
+        <div
+            class="text-center p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 hover:shadow-lg transition-all duration-300 group">
+            <div
+                class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+            </div>
+            <div class="text-2xl font-bold text-indigo-600 mb-2">98%</div>
+            <div class="text-xs text-gray-600 font-medium">Satisfaction Rate</div>
+        </div>
+        <div
+            class="text-center p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 hover:shadow-lg transition-all duration-300 group">
+            <div
+                class="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-5 h-5 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                </svg>
+            </div>
+            <div class="text-2xl font-bold text-emerald-600 mb-2">24/7</div>
+            <div class="text-xs text-gray-600 font-medium">Support Available</div>
+        </div>
+        <div
+            class="text-center p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 hover:shadow-lg transition-all duration-300 group">
+            <div
+                class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                </svg>
+            </div>
+            <div class="text-2xl font-bold text-purple-600 mb-2">50+</div>
+            <div class="text-xs text-gray-600 font-medium">Countries</div>
+        </div>
+        <div
+            class="text-center p-6 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 hover:shadow-lg transition-all duration-300 group">
+            <div
+                class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-5 h-5 text-pink-600" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
+            </div>
+            <div class="text-2xl font-bold text-pink-600 mb-2">5★</div>
+            <div class="text-xs text-gray-600 font-medium">Average Rating</div>
+        </div>
+    </div>
+</div>
+
+<!-- Revolutionary Events Section -->
+{% if recent_events %}
+<div class="mb-20">
+    <div class="text-center mb-12">
+        <div
+            class="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl mb-4 shadow-lg">
+            <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                    d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z" />
+                <path d="M12 6l1.5 3h3l-2.5 2 1 3-3-2-3 2 1-3-2.5-2h3z" />
+            </svg>
+        </div>
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            <span class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Upcoming Events
+            </span>
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Don't miss out on these incredible opportunities to connect, learn, and grow with fellow alumni
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        {% for event in recent_events %}
+        <div class="group relative overflow-hidden bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:scale-105 cursor-pointer border border-gray-100 event-card"
+            data-event-url="{{ url_for('event_detail', event_id=event._id) }}">
+            <!-- Enhanced Event Image -->
+            <div class="relative h-56 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500 overflow-hidden">
+                <!-- Animated Background -->
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-600/80 to-purple-600/80"></div>
+                <div class="absolute inset-0 opacity-30">
+                    <div class="absolute top-4 left-4 w-8 h-8 bg-white/20 rounded-full animate-ping"></div>
+                    <div class="absolute bottom-6 right-6 w-6 h-6 bg-yellow-300/30 rounded-full animate-pulse"></div>
+                    <div class="absolute top-1/2 left-1/2 w-4 h-4 bg-pink-300/40 rounded-full animate-bounce"></div>
+                </div>
+
+                <!-- Event Icon -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div
+                        class="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                        <i class="fas fa-calendar-alt text-white text-3xl"></i>
+                    </div>
+                </div>
+
+                <!-- Date Badge -->
+                <div class="absolute top-6 right-6 bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl shadow-lg">
+                    <div class="text-lg font-black text-gray-900">{{ event.date.strftime('%d') }}</div>
+                    <div class="text-xs font-semibold text-gray-600 -mt-1">{{ event.date.strftime('%b') }}</div>
+                </div>
+
+                <!-- Category Badge -->
+                {% if event.category %}
+                <div
+                    class="absolute top-6 left-6 bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                    {{ event.category }}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Enhanced Event Content -->
+            <div class="p-8">
+                <h3
+                    class="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
+                    {{ event.title }}
+                </h3>
+
+                <!-- Event Details -->
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center text-gray-600">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fas fa-clock text-blue-600"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium text-gray-900 text-sm">{{ event.date.strftime('%B %d, %Y') }}</div>
+                            <div class="text-xs text-gray-500">{{ event.date.strftime('%I:%M %p') }}</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center text-gray-600">
+                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fas fa-map-marker-alt text-red-600"></i>
+                        </div>
+                        <div>
+                            <div class="font-medium text-gray-900 text-sm">{{ event.location }}</div>
+                            <div class="text-xs text-gray-500">Event Location</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Description -->
+                <p class="text-sm text-gray-600 mb-4 line-clamp-3 leading-relaxed">
+                    {{ event.description[:150] }}{% if event.description|length > 150 %}...{% endif %}
+                </p>
+
+                <!-- Event Footer -->
+                <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-users text-green-600 text-sm"></i>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700">{{ event.capacity }} spots available</span>
+                    </div>
+                    <div class="flex items-center text-blue-600 font-bold group-hover:text-blue-800 transition-colors">
+                        <span class="mr-2">Learn More</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform duration-300"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hover Effect Overlay -->
+            <div
+                class="absolute inset-0 bg-gradient-to-t from-blue-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Enhanced CTA -->
+    <div class="text-center mt-16">
+        <a href="{{ url_for('events') }}"
+            class="group relative inline-flex items-center px-12 py-6 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white rounded-2xl text-xl font-bold hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 transition-all duration-500 transform hover:scale-110 shadow-2xl hover:shadow-3xl">
+            <div
+                class="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+            </div>
+            <i class="fas fa-calendar-check mr-3 text-2xl group-hover:rotate-12 transition-transform duration-300"></i>
+            <span class="relative z-10">View All Events</span>
+            <div
+                class="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center text-xs font-black text-gray-900 animate-bounce">
+                🎉
+            </div>
+        </a>
+    </div>
+</div>
+{% else %}
+<!-- Enhanced Empty State -->
+<div class="text-center py-20 mb-16">
+    <div class="relative inline-block mb-8">
+        <div
+            class="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto shadow-lg">
+            <i class="fas fa-calendar-plus text-gray-400 text-5xl"></i>
+        </div>
+        <div
+            class="absolute -top-2 -right-2 w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center animate-bounce">
+            <i class="fas fa-plus text-white text-xl"></i>
+        </div>
+    </div>
+    <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">No Events Yet</h3>
+    <p class="text-lg text-gray-600 mb-8 max-w-xl mx-auto leading-relaxed">
+        Be the first to create an event and bring the alumni community together!
+        Start building connections and creating memorable experiences.
+    </p>
+    {% if get_current_user() and get_current_user().is_admin %}
+    <a href="{{ url_for('create_event') }}"
+        class="group inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl text-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-500 transform hover:scale-105 shadow-lg">
+        <i class="fas fa-plus mr-2 text-lg group-hover:rotate-90 transition-transform duration-300"></i>
+        Create First Event
+    </a>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Revolutionary Features Section -->
+<div class="mb-20">
+    <div class="text-center mb-12">
+        <div
+            class="inline-flex items-center justify-center w-14 h-14 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl mb-4 shadow-lg">
+            <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                <path d="M9 11h6v2H9z"/>
+                <path d="M10 13h4v2h-4z"/>
+            </svg>
+        </div>
+        <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            <span class="bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                Why Choose Us?
+            </span>
+        </h2>
+        <p class="text-lg text-gray-700 max-w-3xl mx-auto leading-relaxed">
+            Everything you need to stay connected with your alumni community in one powerful,
+            intuitive platform designed for modern professionals
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+        <!-- Smart Event Management -->
+        <div
+            class="group relative overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 transform hover:scale-102 border border-blue-200/50">
+            <div
+                class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-400/20 to-indigo-500/20 rounded-full -translate-y-12 translate-x-12 group-hover:scale-150 transition-transform duration-700">
+            </div>
+            <div class="relative z-10">
+                <div
+                    class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-500 shadow-xl">
+                    <i class="fas fa-calendar-alt text-white text-4xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">Smart
+                    Event Management</h3>
+                <p class="text-sm text-gray-600 leading-relaxed mb-3">Create, manage, and track events with our
+                    AI-powered tools. From intimate meetups to grand conferences.</p>
+
+                <!-- Feature List -->
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-blue-500 mr-2"></i>
+                        <span>Automated scheduling</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-blue-500 mr-2"></i>
+                        <span>Real-time analytics</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-blue-500 mr-2"></i>
+                        <span>Custom branding</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Seamless RSVP -->
+        <div
+            class="group relative overflow-hidden bg-gradient-to-br from-emerald-50 to-green-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 transform hover:scale-102 border border-emerald-200/50">
+            <div
+                class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-emerald-400/20 to-green-500/20 rounded-full -translate-y-12 translate-x-12 group-hover:scale-150 transition-transform duration-700">
+            </div>
+            <div class="relative z-10">
+                <div
+                    class="w-20 h-20 bg-gradient-to-br from-emerald-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-500 shadow-xl">
+                    <i class="fas fa-user-check text-white text-4xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors">
+                    Seamless RSVP</h3>
+                <p class="text-sm text-gray-600 leading-relaxed mb-3">One-click RSVP system with intelligent guest
+                    management and automated confirmations.</p>
+
+                <!-- Feature List -->
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-emerald-500 mr-2"></i>
+                        <span>Instant confirmations</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-emerald-500 mr-2"></i>
+                        <span>Dietary preferences</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-emerald-500 mr-2"></i>
+                        <span>Guest management</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Alumni Directory -->
+        <div
+            class="group relative overflow-hidden bg-gradient-to-br from-purple-50 to-pink-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 transform hover:scale-102 border border-purple-200/50">
+            <div
+                class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-purple-400/20 to-pink-500/20 rounded-full -translate-y-12 translate-x-12 group-hover:scale-150 transition-transform duration-700">
+            </div>
+            <div class="relative z-10">
+                <div
+                    class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-500 shadow-xl">
+                    <i class="fas fa-users text-white text-4xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
+                    Alumni Directory</h3>
+                <p class="text-sm text-gray-600 leading-relaxed mb-3">Connect with fellow alumni, discover shared
+                    interests, and build meaningful relationships.</p>
+
+                <!-- Feature List -->
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-purple-500 mr-2"></i>
+                        <span>Advanced search</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-purple-500 mr-2"></i>
+                        <span>Interest matching</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-purple-500 mr-2"></i>
+                        <span>Privacy controls</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Job Board -->
+        <div
+            class="group relative overflow-hidden bg-gradient-to-br from-orange-50 to-red-100 rounded-2xl p-6 hover:shadow-lg transition-all duration-300 transform hover:scale-102 border border-orange-200/50">
+            <div
+                class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-orange-400/20 to-red-500/20 rounded-full -translate-y-12 translate-x-12 group-hover:scale-150 transition-transform duration-700">
+            </div>
+            <div class="relative z-10">
+                <div
+                    class="w-20 h-20 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:rotate-12 transition-transform duration-500 shadow-xl">
+                    <i class="fas fa-briefcase text-white text-4xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors">
+                    Career Hub</h3>
+                <p class="text-sm text-gray-600 leading-relaxed mb-3">Discover exclusive career opportunities shared by
+                    fellow alumni and industry leaders.</p>
+
+                <!-- Feature List -->
+                <ul class="space-y-2 text-sm text-gray-600">
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-orange-500 mr-2"></i>
+                        <span>Exclusive opportunities</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-orange-500 mr-2"></i>
+                        <span>Referral system</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-orange-500 mr-2"></i>
+                        <span>Skill matching</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Additional Features Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-5xl mx-auto">
+        <div
+            class="text-center p-8 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 hover:shadow-lg transition-all duration-300 group">
+            <div
+                class="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-mobile-alt text-white text-2xl"></i>
+            </div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-2">Mobile First</h4>
+            <p class="text-sm text-gray-600">Optimized for all devices with native mobile experience</p>
+        </div>
+
+        <div
+            class="text-center p-8 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 hover:shadow-lg transition-all duration-300 group">
+            <div
+                class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5C15.4,11.5 16,12.4 16,13V16C16,17.4 15.4,18 14.8,18H9.2C8.6,18 8,17.4 8,16V13C8,12.4 8.6,11.5 9.2,11.5V10C9.2,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,10V11.5H13.5V10C13.5,8.7 12.8,8.2 12,8.2Z" />
+                </svg>
+            </div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-2">Enterprise Security</h4>
+            <p class="text-sm text-gray-600">Bank-level encryption and GDPR compliant data protection</p>
+        </div>
+
+        <div
+            class="text-center p-8 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200/50 hover:shadow-lg transition-all duration-300 group">
+            <div
+                class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z" />
+                    <circle cx="12" cy="12" r="2" />
+                </svg>
+            </div>
+            <h4 class="text-lg font-semibold text-gray-900 mb-2">24/7 Support</h4>
+            <p class="text-sm text-gray-600">Round-the-clock assistance from our dedicated support team</p>
+        </div>
+    </div>
+</div>
+
+<!-- Revolutionary Call to Action Section -->
+{% if not get_current_user() %}
+<div
+    class="relative overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 rounded-3xl p-16 text-center shadow-2xl mb-16">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 overflow-hidden">
+        <div class="absolute top-10 left-10 w-3 h-3 bg-white/20 rounded-full animate-ping"></div>
+        <div class="absolute top-20 right-20 w-2 h-2 bg-yellow-300/30 rounded-full animate-pulse"></div>
+        <div class="absolute bottom-16 left-1/4 w-4 h-4 bg-pink-300/20 rounded-full animate-bounce"></div>
+        <div class="absolute top-1/3 right-1/3 w-1 h-1 bg-blue-300/40 rounded-full animate-ping"
+            style="animation-delay: 2s;"></div>
+    </div>
+
+    <div class="relative z-10">
+        <!-- Attention-grabbing Icon -->
+        <div
+            class="inline-flex items-center justify-center w-24 h-24 bg-white/10 backdrop-blur-xl rounded-3xl mb-8 floating-animation">
+            <i class="fas fa-rocket text-white text-5xl"></i>
+        </div>
+
+        <h2 class="text-2xl md:text-4xl font-bold text-white mb-4">
+            Ready to <span
+                class="bg-gradient-to-r from-yellow-300 to-pink-300 bg-clip-text text-transparent">Transform</span> Your
+            Alumni Experience?
+        </h2>
+
+        <p class="text-lg md:text-xl text-blue-100 mb-8 max-w-3xl mx-auto leading-relaxed">
+            Join <span class="font-bold text-yellow-300">{{ stats.total_users }}+ alumni</span> who are already using
+            our platform to stay connected,
+            discover opportunities, and build lasting relationships. Your journey starts here! 🚀
+        </p>
+
+        <!-- Enhanced CTA Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+            <a href="{{ url_for('register') }}"
+                class="group relative overflow-hidden bg-white text-indigo-900 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-100 transition-all duration-500 transform hover:scale-105 shadow-xl">
+                <div
+                    class="absolute inset-0 bg-gradient-to-r from-yellow-300 to-pink-300 opacity-0 group-hover:opacity-20 transition-opacity duration-500">
+                </div>
+                <div class="relative z-10 flex items-center">
+                    <i
+                        class="fas fa-user-plus mr-3 text-xl group-hover:rotate-12 transition-transform duration-300"></i>
+                    <span>Create Free Account</span>
+                    <div class="ml-3 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center animate-pulse">
+                        <i class="fas fa-check text-white text-xs"></i>
+                    </div>
+                </div>
+                <div
+                    class="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold animate-bounce">
+                    FREE
+                </div>
+            </a>
+
+            <a href="{{ url_for('events') }}"
+                class="group bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-white hover:text-indigo-900 transition-all duration-500 transform hover:scale-102">
+                <i class="fas fa-eye mr-3 text-xl group-hover:scale-110 transition-transform duration-300"></i>
+                Browse Events First
+            </a>
+        </div>
+
+        <!-- Trust Indicators -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div class="flex flex-col items-center p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+                <div class="w-10 h-10 bg-yellow-500/20 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-5 h-5 text-yellow-300" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M13 3l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L13 17.77l-6.18 3.25L8 14.14 3 9.27l6.91-1.01L13 3z"/>
+                    </svg>
+                </div>
+                <div class="text-sm font-bold text-white">Instant Setup</div>
+            </div>
+            <div class="flex flex-col items-center p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+                <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-5 h-5 text-green-300" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M10,17L6,13L7.41,11.59L10,14.17L16.59,7.58L18,9L10,17Z"/>
+                    </svg>
+                </div>
+                <div class="text-sm font-bold text-white">100% Secure</div>
+            </div>
+            <div class="flex flex-col items-center p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+                <div class="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-5 h-5 text-blue-300" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17 2H7c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM7 4h10v12H7V4z"/>
+                        <circle cx="12" cy="18.5" r="1.5"/>
+                    </svg>
+                </div>
+                <div class="text-sm font-bold text-white">Mobile Ready</div>
+            </div>
+            <div class="flex flex-col items-center p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+                <div class="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-5 h-5 text-purple-300" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div class="text-sm font-bold text-white">No Spam Ever</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<!-- Personalized CTA for Logged-in Users -->
+<div
+    class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 rounded-3xl p-16 text-center shadow-2xl mb-16">
+    <div class="relative z-10">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-white/20 backdrop-blur-xl rounded-2xl mb-6">
+            <i class="fas fa-heart text-white text-4xl"></i>
+        </div>
+
+        <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">
+            Welcome back, <span class="text-yellow-300">{{ get_current_user().name.split()[0] if get_current_user().name
+                else 'Alumni' }}</span>! 👋
+        </h2>
+
+        <p class="text-lg text-emerald-100 mb-6 max-w-2xl mx-auto">
+            Ready to discover new events, connect with fellow alumni, and make the most of your community?
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="{{ url_for('events') }}"
+                class="bg-white text-emerald-600 px-8 py-3 rounded-xl text-lg font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-102 shadow-lg">
+                <i class="fas fa-calendar-star mr-2"></i>Explore Events
+            </a>
+            <a href="{{ url_for('directory') }}"
+                class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-white hover:text-emerald-600 transition-all duration-300">
+                <i class="fas fa-users mr-2"></i>Connect with Alumni
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Footer Section -->
+<div class="text-center py-16 border-t border-gray-200 mt-20">
+    <div class="max-w-4xl mx-auto">
+        <h3 class="text-xl font-semibold text-gray-900 mb-3">Join the Alumni Revolution</h3>
+        <p class="text-gray-600 mb-6">
+            Be part of a growing community that's redefining how alumni stay connected and engaged.
+        </p>
+
+        <!-- Enhanced Social Proof -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
+            <div class="flex flex-col items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300 group">
+                <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                </div>
+                <div class="text-sm font-semibold text-gray-900">4.9/5 Rating</div>
+            </div>
+            <div class="flex flex-col items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300 group">
+                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                    </svg>
+                </div>
+                <div class="text-sm font-semibold text-gray-900">50+ Countries</div>
+            </div>
+            <div class="flex flex-col items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300 group">
+                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M5 16L3 5h5.5l1.5 9 1.5-9H17l-2 11H5zm7-13.5L9.5 9h5L12 2.5z"/>
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </div>
+                <div class="text-sm font-semibold text-gray-900">Award Winning</div>
+            </div>
+            <div class="flex flex-col items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300 group">
+                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+                <div class="text-sm font-semibold text-gray-900">24/7 Support</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Event Card Clicks -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Handle event card clicks
+        const eventCards = document.querySelectorAll('.event-card');
+        eventCards.forEach(card => {
+            card.addEventListener('click', function () {
+                const eventUrl = this.getAttribute('data-event-url');
+                if (eventUrl) {
+                    window.location.href = eventUrl;
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

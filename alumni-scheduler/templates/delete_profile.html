@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}Delete Profile - Alumni Event Scheduler{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 py-8">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-exclamation-triangle text-red-600 text-3xl"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-red-600 mb-4">
+                Delete Account
+            </h1>
+            <p class="text-lg text-gray-600 max-w-xl mx-auto">
+                This action cannot be undone. Your profile and all associated data will be permanently removed.
+            </p>
+        </div>
+
+        <!-- Warning Card -->
+        <div class="card-enhanced p-8 border-l-4 border-red-500">
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-info-circle mr-2 text-red-500"></i>What will be deleted:
+                </h3>
+                <ul class="space-y-2 text-gray-700">
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-red-500 mr-3"></i>
+                        Your profile information and bio
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-red-500 mr-3"></i>
+                        All uploaded photos and documents
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-red-500 mr-3"></i>
+                        Your event RSVPs and comments
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-red-500 mr-3"></i>
+                        Social links and contact information
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-red-500 mr-3"></i>
+                        Notification preferences and settings
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-lightbulb text-yellow-600"></i>
+                    </div>
+                    <div class="ml-3">
+                        <h4 class="text-sm font-medium text-yellow-800">
+                            Consider these alternatives:
+                        </h4>
+                        <div class="mt-2 text-sm text-yellow-700">
+                            <ul class="list-disc list-inside space-y-1">
+                                <li>Update your privacy settings instead</li>
+                                <li>Take a break by deactivating notifications</li>
+                                <li>Export your data first for your records</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirmation Form -->
+            <form method="POST" class="space-y-6" id="deleteForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                
+                <div class="space-y-2">
+                    <label for="confirmation" class="block text-sm font-semibold text-gray-700">
+                        Type "DELETE" to confirm account deletion:
+                    </label>
+                    <input type="text" 
+                           name="confirmation" 
+                           id="confirmation" 
+                           class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300"
+                           placeholder="Type DELETE here"
+                           required>
+                </div>
+
+                <div class="flex justify-center space-x-4 pt-6">
+                    <a href="{{ url_for('profile_settings') }}" 
+                       class="btn-secondary px-8 py-3 rounded-xl font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all duration-300">
+                        <i class="fas fa-arrow-left mr-2"></i>Cancel
+                    </a>
+                    <button type="submit" 
+                            id="deleteBtn"
+                            disabled
+                            class="px-8 py-3 rounded-xl font-semibold text-white bg-red-600 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-300">
+                        <i class="fas fa-trash mr-2"></i>
+                        <span id="deleteText">Delete My Account</span>
+                        <i class="fas fa-spinner fa-spin ml-2 hidden" id="deleteSpinner"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Additional Resources -->
+        <div class="text-center mt-8">
+            <p class="text-gray-600 mb-4">Need help or have questions?</p>
+            <div class="flex justify-center space-x-4">
+                <a href="{{ url_for('export_data') }}" 
+                   class="text-blue-600 hover:text-blue-800 font-medium">
+                    <i class="fas fa-download mr-1"></i>Export Data First
+                </a>
+                <a href="mailto:support@alumni-event-scheduler.com" 
+                   class="text-blue-600 hover:text-blue-800 font-medium">
+                    <i class="fas fa-envelope mr-1"></i>Contact Support
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('deleteForm');
+    const confirmationInput = document.getElementById('confirmation');
+    const deleteBtn = document.getElementById('deleteBtn');
+    const deleteText = document.getElementById('deleteText');
+    const deleteSpinner = document.getElementById('deleteSpinner');
+
+    // Enable/disable delete button based on confirmation input
+    confirmationInput.addEventListener('input', function() {
+        if (this.value === 'DELETE') {
+            deleteBtn.disabled = false;
+            deleteBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+            deleteBtn.classList.add('bg-red-600', 'hover:bg-red-700');
+        } else {
+            deleteBtn.disabled = true;
+            deleteBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+            deleteBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
+        }
+    });
+
+    // Form submission with loading state
+    form.addEventListener('submit', function(e) {
+        if (confirmationInput.value !== 'DELETE') {
+            e.preventDefault();
+            alert('Please type "DELETE" to confirm account deletion.');
+            return;
+        }
+
+        // Show loading state
+        deleteBtn.disabled = true;
+        deleteText.textContent = 'Deleting Account...';
+        deleteSpinner.classList.remove('hidden');
+    });
+});
+</script>
+{% endblock %}

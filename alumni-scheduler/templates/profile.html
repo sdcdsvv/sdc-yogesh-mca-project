@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% block title %}{{ user.name }} - Alumni Event Scheduler{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 py-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Profile Header -->
+        <div class="card-enhanced p-8 mb-8">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+                <div class="flex items-center space-x-6">
+                    <!-- Profile Picture -->
+                    <div class="relative">
+                        {% if user.profile_picture %}
+                        <img src="{{ url_for('static', filename=user.profile_picture) }}" 
+                             alt="{{ user.name }}"
+                             class="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg">
+                        {% else %}
+                        <div class="w-32 h-32 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-4xl font-bold border-4 border-white shadow-lg">
+                            {{ user.name[0].upper() if user.name else 'U' }}
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Online Status Indicator -->
+                        <div class="absolute bottom-2 right-2 w-6 h-6 bg-green-500 rounded-full border-2 border-white"></div>
+                    </div>
+                    
+                    <!-- Profile Info -->
+                    <div class="flex-1">
+                        <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ user.name }}</h1>
+                        <p class="text-xl text-gray-600 mb-2">Class of {{ user.grad_year }}</p>
+                        
+                        {% if user.bio %}
+                        <p class="text-gray-700 mb-4 max-w-2xl">{{ user.bio }}</p>
+                        {% endif %}
+                        
+                        <!-- Contact Info -->
+                        <div class="flex flex-wrap items-center gap-4 text-gray-600">
+                            {% if user.phone %}
+                            <div class="flex items-center">
+                                <i class="fas fa-phone mr-2 text-purple-500"></i>
+                                <span>{{ user.phone }}</span>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="flex items-center">
+                                <i class="fas fa-envelope mr-2 text-purple-500"></i>
+                                <span>{{ user.email }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="mt-6 lg:mt-0 lg:ml-6 flex flex-col space-y-3">
+                    {% if user._id|string == get_current_user().id|string %}
+                    <a href="{{ url_for('edit_profile') }}" 
+                       class="btn-primary px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-edit mr-2"></i>Edit Profile
+                    </a>
+                    <a href="{{ url_for('profile_settings') }}" 
+                       class="btn-secondary px-6 py-3 rounded-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all duration-300">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </a>
+                    {% else %}
+                    <button class="btn-primary px-6 py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105">
+                        <i class="fas fa-envelope mr-2"></i>Send Message
+                    </button>
+                    <button class="btn-secondary px-6 py-3 rounded-lg font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all duration-300">
+                        <i class="fas fa-user-plus mr-2"></i>Connect
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- Skills Section -->
+                {% if user.skills %}
+                <div class="card-enhanced p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-tools mr-2 text-purple-500"></i>Skills
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for skill in user.skills %}
+                        <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                            {{ skill }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Interests Section -->
+                {% if user.interests %}
+                <div class="card-enhanced p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-heart mr-2 text-purple-500"></i>Interests
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% for interest in user.interests %}
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                            {{ interest }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Recent Activity (Placeholder) -->
+                <div class="card-enhanced p-6">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-clock mr-2 text-purple-500"></i>Recent Activity
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-calendar-check text-green-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Joined Alumni Network</p>
+                                <p class="text-xs text-gray-500">{{ user.created_at.strftime('%B %d, %Y') if user.created_at else 'Recently' }}</p>
+                            </div>
+                        </div>
+                        
+                        {% if user.last_login %}
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-sign-in-alt text-blue-600"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-800">Last Active</p>
+                                <p class="text-xs text-gray-500">{{ user.last_login.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-8">
+                <!-- Social Links -->
+                {% if user.social_links and (user.social_links.linkedin or user.social_links.twitter or user.social_links.github) %}
+                <div class="card-enhanced p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-share-alt mr-2 text-purple-500"></i>Social Links
+                    </h3>
+                    <div class="space-y-3">
+                        {% if user.social_links.linkedin %}
+                        <a href="{{ user.social_links.linkedin }}" 
+                           target="_blank"
+                           class="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                            <i class="fab fa-linkedin text-blue-600 text-xl"></i>
+                            <span class="text-blue-800 font-medium">LinkedIn</span>
+                            <i class="fas fa-external-link-alt text-blue-400 ml-auto"></i>
+                        </a>
+                        {% endif %}
+                        
+                        {% if user.social_links.twitter %}
+                        <a href="{{ user.social_links.twitter }}" 
+                           target="_blank"
+                           class="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                            <i class="fab fa-twitter text-blue-400 text-xl"></i>
+                            <span class="text-blue-800 font-medium">Twitter</span>
+                            <i class="fas fa-external-link-alt text-blue-400 ml-auto"></i>
+                        </a>
+                        {% endif %}
+                        
+                        {% if user.social_links.github %}
+                        <a href="{{ user.social_links.github }}" 
+                           target="_blank"
+                           class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fab fa-github text-gray-600 text-xl"></i>
+                            <span class="text-gray-800 font-medium">GitHub</span>
+                            <i class="fas fa-external-link-alt text-gray-400 ml-auto"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Profile Stats -->
+                <div class="card-enhanced p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-chart-bar mr-2 text-purple-500"></i>Profile Stats
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Profile Completeness</span>
+                            <span class="font-semibold text-purple-600">{{ calculate_profile_completeness(user) }}%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full" 
+                                 style="width: {{ calculate_profile_completeness(user) }}%"></div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Skills Listed</span>
+                            <span class="font-semibold text-purple-600">{{ user.skills|length if user.skills else 0 }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Interests Listed</span>
+                            <span class="font-semibold text-purple-600">{{ user.interests|length if user.interests else 0 }}</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Social Links</span>
+                            <span class="font-semibold text-purple-600">
+                                {{ (user.social_links.linkedin|length + user.social_links.twitter|length + user.social_links.github|length) if user.social_links else 0 }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                {% if user._id|string == get_current_user().id|string %}
+                <div class="card-enhanced p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">
+                        <i class="fas fa-bolt mr-2 text-purple-500"></i>Quick Actions
+                    </h3>
+                    <div class="space-y-3">
+                        <a href="{{ url_for('directory') }}" 
+                           class="block w-full text-center px-4 py-2 bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition-colors">
+                            <i class="fas fa-users mr-2"></i>Browse Alumni
+                        </a>
+                        <a href="{{ url_for('jobs') }}" 
+                           class="block w-full text-center px-4 py-2 bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition-colors">
+                            <i class="fas fa-briefcase mr-2"></i>View Jobs
+                        </a>
+                        <a href="{{ url_for('events') }}" 
+                           class="block w-full text-center px-4 py-2 bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition-colors">
+                            <i class="fas fa-calendar mr-2"></i>Browse Events
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Completeness Calculation -->
+<script>
+function calculateProfileCompleteness(user) {
+    let score = 0;
+    const total = 8;
+    
+    if (user.name) score++;
+    if (user.bio) score++;
+    if (user.phone) score++;
+    if (user.profile_picture) score++;
+    if (user.skills && user.skills.length > 0) score++;
+    if (user.interests && user.interests.length > 0) score++;
+    if (user.social_links && (user.social_links.linkedin || user.social_links.twitter || user.social_links.github)) score++;
+    if (user.grad_year) score++;
+    
+    return Math.round((score / total) * 100);
+}
+</script>
+{% endblock %}

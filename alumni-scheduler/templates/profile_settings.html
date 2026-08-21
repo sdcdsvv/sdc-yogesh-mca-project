@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %}Profile Settings - Alumni Event Scheduler{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-4">
+                Profile Settings
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Manage your notification preferences and account settings.
+            </p>
+        </div>
+
+        <!-- Settings Form -->
+        <div class="card-enhanced p-8">
+            <form method="POST" class="space-y-8" id="settingsForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                
+                <!-- Notification Preferences -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-gray-800 border-b border-gray-200 pb-2">
+                        <i class="fas fa-bell mr-2 text-purple-500"></i>Notification Preferences
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Email Notifications -->
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Email Notifications</h4>
+                                <p class="text-sm text-gray-600">Receive event updates via email</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" 
+                                       name="email_notifications" 
+                                       class="sr-only peer"
+                                       {% if user.preferences and user.preferences.email_notifications %}checked{% endif %}>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                            </label>
+                        </div>
+
+                        <!-- SMS Notifications -->
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <h4 class="font-semibold text-gray-800">SMS Notifications</h4>
+                                <p class="text-sm text-gray-600">Receive urgent updates via SMS</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" 
+                                       name="sms_notifications" 
+                                       class="sr-only peer"
+                                       {% if user.preferences and user.preferences.sms_notifications %}checked{% endif %}>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                            </label>
+                        </div>
+
+                        <!-- Push Notifications -->
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Push Notifications</h4>
+                                <p class="text-sm text-gray-600">Browser push notifications</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" 
+                                       name="push_notifications" 
+                                       class="sr-only peer"
+                                       {% if user.preferences and user.preferences.push_notifications %}checked{% endif %}>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                            </label>
+                        </div>
+
+                        <!-- Event Reminders -->
+                        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Event Reminders</h4>
+                                <p class="text-sm text-gray-600">Reminders before events</p>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" 
+                                       name="event_reminders" 
+                                       class="sr-only peer"
+                                       {% if user.preferences and user.preferences.event_reminders %}checked{% endif %}>
+                                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Management -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-gray-800 border-b border-gray-200 pb-2">
+                        <i class="fas fa-user-cog mr-2 text-purple-500"></i>Account Management
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Export Data -->
+                        <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <h4 class="font-semibold text-gray-800 mb-2">Export Your Data</h4>
+                            <p class="text-sm text-gray-600 mb-4">Download all your profile data in JSON format</p>
+                            <a href="{{ url_for('export_data') }}" 
+                               class="btn-secondary px-4 py-2 rounded-lg font-medium text-blue-600 bg-blue-100 hover:bg-blue-200 transition-colors">
+                                <i class="fas fa-download mr-2"></i>Export Data
+                            </a>
+                        </div>
+
+                        <!-- Delete Account -->
+                        <div class="p-4 bg-red-50 rounded-lg border border-red-200">
+                            <h4 class="font-semibold text-gray-800 mb-2">Delete Account</h4>
+                            <p class="text-sm text-gray-600 mb-4">Permanently delete your account and data</p>
+                            <a href="{{ url_for('delete_profile') }}" 
+                               class="btn-danger px-4 py-2 rounded-lg font-medium text-red-600 bg-red-100 hover:bg-red-200 transition-colors">
+                                <i class="fas fa-trash mr-2"></i>Delete Account
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-center space-x-4 pt-6 border-t border-gray-200">
+                    <a href="{{ url_for('profile') }}" 
+                       class="btn-secondary px-8 py-3 rounded-xl font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 transition-all duration-300">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Profile
+                    </a>
+                    <button type="submit" 
+                            class="btn-primary px-8 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                        <i class="fas fa-save mr-2"></i>Save Settings
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('settingsForm');
+    
+    form.addEventListener('submit', function(e) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Saving...';
+    });
+});
+</script>
+{% endblock %}

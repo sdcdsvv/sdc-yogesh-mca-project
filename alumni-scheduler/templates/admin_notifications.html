@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block title %}Send Notifications - Alumni Event Scheduler{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white shadow rounded-lg mb-6">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h1 class="text-2xl font-bold text-gray-900">
+                <i class="fas fa-bell mr-2"></i>Send Notifications
+            </h1>
+            <p class="text-gray-600">Send notifications to users via email</p>
+        </div>
+    </div>
+
+    <!-- Notification Form -->
+    <div class="bg-white shadow rounded-lg">
+        <form method="POST" class="p-6">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="space-y-6">
+                <!-- Notification Type -->
+                <div>
+                    <label for="type" class="block text-sm font-medium text-gray-700 mb-2">Notification Type</label>
+                    <select name="type" id="type" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">Select notification type</option>
+                        <option value="general">General Announcement</option>
+                        <option value="event_reminder">Event Reminder</option>
+                        <option value="event_update">Event Update</option>
+                        <option value="system">System Notification</option>
+                    </select>
+                </div>
+
+                <!-- Subject -->
+                <div>
+                    <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                    <input type="text" name="subject" id="subject" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                           placeholder="Enter notification subject" required>
+                </div>
+
+                <!-- Message -->
+                <div>
+                    <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                    <textarea name="message" id="message" rows="6" 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                              placeholder="Enter your notification message here..." required></textarea>
+                </div>
+
+                <!-- Target Users -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Target Users</label>
+                    <div class="border border-gray-300 rounded-md p-4 max-h-64 overflow-y-auto">
+                        <div class="mb-3">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="select-all" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm font-medium text-gray-700">Select All Users</span>
+                            </label>
+                        </div>
+                        <div class="space-y-2">
+                            {% for user in users %}
+                            <label class="flex items-center">
+                                <input type="checkbox" name="target_users" value="{{ user._id }}" 
+                                       class="rounded border-gray-300 text-blue-600 focus:ring-blue-500 user-checkbox">
+                                <span class="ml-2 text-sm text-gray-700">
+                                    {{ user.name }} ({{ user.email }})
+                                    {% if user.is_admin %}
+                                        <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800 ml-2">Admin</span>
+                                    {% endif %}
+                                </span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end">
+                    <button type="submit" 
+                            class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors">
+                        <i class="fas fa-paper-plane mr-2"></i>Send Notifications
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Quick Templates -->
+    <div class="bg-white shadow rounded-lg mt-6">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">Quick Templates</h2>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button onclick="useTemplate('event_reminder')" 
+                        class="text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                    <h3 class="font-medium text-gray-900">Event Reminder</h3>
+                    <p class="text-sm text-gray-600 mt-1">Remind users about upcoming events</p>
+                </button>
+                
+                <button onclick="useTemplate('welcome')" 
+                        class="text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                    <h3 class="font-medium text-gray-900">Welcome Message</h3>
+                    <p class="text-sm text-gray-600 mt-1">Welcome new users to the platform</p>
+                </button>
+                
+                <button onclick="useTemplate('maintenance')" 
+                        class="text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                    <h3 class="font-medium text-gray-900">Maintenance Notice</h3>
+                    <p class="text-sm text-gray-600 mt-1">Notify users about system maintenance</p>
+                </button>
+                
+                <button onclick="useTemplate('event_cancelled')" 
+                        class="text-left p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                    <h3 class="font-medium text-gray-900">Event Cancelled</h3>
+                    <p class="text-sm text-gray-600 mt-1">Notify users about cancelled events</p>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Select all functionality
+document.getElementById('select-all').addEventListener('change', function() {
+    const checkboxes = document.querySelectorAll('.user-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+    });
+});
+
+// Quick templates
+const templates = {
+    event_reminder: {
+        subject: "Upcoming Event Reminder",
+        message: "Don't forget! We have an upcoming event that you might be interested in. Please check the events page for more details."
+    },
+    welcome: {
+        subject: "Welcome to Alumni Event Scheduler!",
+        message: "Welcome to our alumni community! We're excited to have you join us. You can now browse and RSVP to upcoming events."
+    },
+    maintenance: {
+        subject: "Scheduled Maintenance Notice",
+        message: "We will be performing scheduled maintenance on our system. The platform may be temporarily unavailable during this time."
+    },
+    event_cancelled: {
+        subject: "Event Cancellation Notice",
+        message: "We regret to inform you that an upcoming event has been cancelled. We apologize for any inconvenience this may cause."
+    }
+};
+
+function useTemplate(templateName) {
+    const template = templates[templateName];
+    if (template) {
+        document.getElementById('subject').value = template.subject;
+        document.getElementById('message').value = template.message;
+    }
+}
+</script>
+{% endblock %}

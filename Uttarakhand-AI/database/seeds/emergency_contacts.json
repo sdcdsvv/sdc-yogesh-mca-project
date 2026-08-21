@@ -1,0 +1,232 @@
+{
+  "emergency_contacts": [
+    {
+      "name": "Police Emergency",
+      "number": "100",
+      "description": "24/7 Police emergency assistance across India",
+      "category": "police",
+      "active": true
+    },
+    {
+      "name": "Ambulance Emergency",
+      "number": "108",
+      "description": "Free ambulance service for medical emergencies",
+      "category": "ambulance",
+      "active": true
+    },
+    {
+      "name": "Fire Department",
+      "number": "101",
+      "description": "Fire emergency and rescue services",
+      "category": "fire",
+      "active": true
+    },
+    {
+      "name": "Disaster Management",
+      "number": "1070",
+      "description": "Natural disaster assistance and coordination",
+      "category": "disaster",
+      "active": true
+    },
+    {
+      "name": "Women Helpline",
+      "number": "1091",
+      "description": "24/7 women safety and support helpline",
+      "category": "helpline",
+      "active": true
+    },
+    {
+      "name": "Child Helpline",
+      "number": "1098",
+      "description": "Child protection and welfare services",
+      "category": "helpline",
+      "active": true
+    },
+    {
+      "name": "Tourist Helpline",
+      "number": "1363",
+      "description": "Tourism assistance and information",
+      "category": "helpline",
+      "active": true
+    },
+    {
+      "name": "Uttarakhand Tourism Helpline",
+      "number": "0135-2746817",
+      "description": "State tourism department helpline",
+      "category": "helpline",
+      "active": true
+    },
+    {
+      "name": "Dehradun Police Control",
+      "number": "0135-2656666",
+      "description": "Dehradun district police control room",
+      "category": "police",
+      "district": "Dehradun",
+      "active": true
+    },
+    {
+      "name": "Dehradun District Hospital",
+      "number": "0135-2653400",
+      "description": "Main district hospital emergency",
+      "category": "ambulance",
+      "district": "Dehradun",
+      "active": true
+    },
+    {
+      "name": "Nainital Police Control",
+      "number": "05942-231100",
+      "description": "Nainital district police control room",
+      "category": "police",
+      "district": "Nainital",
+      "active": true
+    },
+    {
+      "name": "Nainital District Hospital",
+      "number": "05942-235395",
+      "description": "Nainital district hospital emergency",
+      "category": "ambulance",
+      "district": "Nainital",
+      "active": true
+    },
+    {
+      "name": "Haridwar Police Control",
+      "number": "01334-223344",
+      "description": "Haridwar district police control room",
+      "category": "police",
+      "district": "Haridwar",
+      "active": true
+    },
+    {
+      "name": "Haridwar District Hospital",
+      "number": "01334-220073",
+      "description": "Haridwar district hospital emergency",
+      "category": "ambulance",
+      "district": "Haridwar",
+      "active": true
+    },
+    {
+      "name": "Rishikesh Police Station",
+      "number": "0135-2430226",
+      "description": "Rishikesh main police station",
+      "category": "police",
+      "district": "Dehradun",
+      "active": true
+    },
+    {
+      "name": "AIIMS Rishikesh Emergency",
+      "number": "0135-2462043",
+      "description": "AIIMS Rishikesh 24/7 emergency services",
+      "category": "ambulance",
+      "district": "Dehradun",
+      "active": true
+    },
+    {
+      "name": "Mussoorie Police Station",
+      "number": "0135-2632020",
+      "description": "Mussoorie police station",
+      "category": "police",
+      "district": "Dehradun",
+      "active": true
+    },
+    {
+      "name": "Almora Police Control",
+      "number": "05962-230100",
+      "description": "Almora district police control room",
+      "category": "police",
+      "district": "Almora",
+      "active": true
+    },
+    {
+      "name": "Pithoragarh Police Control",
+      "number": "05964-225100",
+      "description": "Pithoragarh district police control room",
+      "category": "police",
+      "district": "Pithoragarh",
+      "active": true
+    },
+    {
+      "name": "Uttarkashi Police Control",
+      "number": "01374-222100",
+      "description": "Uttarkashi district police control room",
+      "category": "police",
+      "district": "Uttarkashi",
+      "active": true
+    },
+    {
+      "name": "Chamoli Police Control",
+      "number": "01372-251100",
+      "description": "Chamoli district police control room",
+      "category": "police",
+      "district": "Chamoli",
+      "active": true
+    },
+    {
+      "name": "Rudraprayag Police Control",
+      "number": "01364-233100",
+      "description": "Rudraprayag district police control room",
+      "category": "police",
+      "district": "Rudraprayag",
+      "active": true
+    },
+    {
+      "name": "Tehri Police Control",
+      "number": "01376-233100",
+      "description": "Tehri Garhwal district police control room",
+      "category": "police",
+      "district": "Tehri",
+      "active": true
+    },
+    {
+      "name": "Pauri Police Control",
+      "number": "01368-222100",
+      "description": "Pauri Garhwal district police control room",
+      "category": "police",
+      "district": "Pauri",
+      "active": true
+    },
+    {
+      "name": "Jim Corbett National Park Emergency",
+      "number": "05947-251489",
+      "description": "Jim Corbett Park emergency and rescue",
+      "category": "other",
+      "district": "Nainital",
+      "active": true
+    },
+    {
+      "name": "Rajaji National Park Emergency",
+      "number": "0135-2621669",
+      "description": "Rajaji National Park emergency contact",
+      "category": "other",
+      "district": "Dehradun",
+      "active": true
+    },
+    {
+      "name": "Mountain Rescue Helpline",
+      "number": "1905",
+      "description": "Mountain rescue and trekking emergency",
+      "category": "disaster",
+      "active": true
+    },
+    {
+      "name": "Uttarakhand State Disaster Response Force",
+      "number": "0135-2710334",
+      "description": "State disaster response and rescue operations",
+      "category": "disaster",
+      "active": true
+    },
+    {
+      "name": "Road Accident Emergency",
+      "number": "1073",
+      "description": "Road accident emergency response",
+      "category": "ambulance",
+      "active": true
+    },
+    {
+      "name": "Senior Citizen Helpline",
+      "number": "14567",
+      "description": "Helpline for senior citizens",
+      "category": "helpline",
+      "active": true
+    }
+  ]
+}

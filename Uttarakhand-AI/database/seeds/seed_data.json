@@ -1,0 +1,77 @@
+{
+  "places": [
+    {
+      "name": "Kedarnath Temple",
+      "description": "One of the holiest Hindu temples dedicated to Lord Shiva, located in the Garhwal Himalayas",
+      "location": "Kedarnath, Rudraprayag",
+      "district": "Rudraprayag",
+      "category": "temple",
+      "best_time_to_visit": "May to October",
+      "entry_fee": 0,
+      "coordinates": {
+        "latitude": 30.7343,
+        "longitude": 79.0669
+      },
+      "nearby_places": ["Badrinath", "Gangotri", "Yamunotri"]
+    },
+    {
+      "name": "Mussoorie",
+      "description": "Queen of Hills - a popular hill station with scenic views and pleasant weather",
+      "location": "Mussoorie, Dehradun",
+      "district": "Dehradun",
+      "category": "hill_station",
+      "best_time_to_visit": "March to June, September to November",
+      "entry_fee": 0,
+      "coordinates": {
+        "latitude": 30.4546,
+        "longitude": 78.0798
+      },
+      "nearby_places": ["Dehradun", "Rishikesh", "Landour"]
+    },
+    {
+      "name": "Nainital",
+      "description": "Beautiful hill station with a stunning lake, perfect for boating and nature walks",
+      "location": "Nainital, Nainital",
+      "district": "Nainital",
+      "category": "hill_station",
+      "best_time_to_visit": "March to June, September to November",
+      "entry_fee": 0,
+      "coordinates": {
+        "latitude": 29.3919,
+        "longitude": 79.4542
+      },
+      "nearby_places": ["Bhimtal", "Sattal", "Mukteshwar"]
+    }
+  ],
+  "emergencies": [
+    {
+      "name": "Police",
+      "number": "100",
+      "description": "Emergency police assistance",
+      "category": "police",
+      "active": true
+    },
+    {
+      "name": "Ambulance",
+      "number": "108",
+      "description": "Medical emergency",
+      "category": "ambulance",
+      "active": true
+    },
+    {
+      "name": "Fire Department",
+      "number": "101",
+      "description": "Fire emergency",
+      "category": "fire",
+      "active": true
+    },
+    {
+      "name": "Tourist Helpline",
+      "number": "1363",
+      "description": "Tourism assistance and information",
+      "category": "helpline",
+      "active": true
+    }
+  ]
+}
+

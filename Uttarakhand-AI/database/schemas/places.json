@@ -1,0 +1,73 @@
+{
+  "collection": "places",
+  "schema": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "description": "Name of the place"
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "description": "Description of the place"
+    },
+    "location": {
+      "type": "string",
+      "required": true,
+      "description": "Location/address"
+    },
+    "district": {
+      "type": "string",
+      "required": true,
+      "description": "District name"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["temple", "hill_station", "adventure", "wildlife", "trekking", "spiritual", "nature", "other"],
+      "description": "Category of the place"
+    },
+    "best_time_to_visit": {
+      "type": "string",
+      "description": "Best time to visit"
+    },
+    "entry_fee": {
+      "type": "number",
+      "default": 0,
+      "description": "Entry fee in INR"
+    },
+    "coordinates": {
+      "type": "object",
+      "properties": {
+        "latitude": "number",
+        "longitude": "number"
+      },
+      "description": "GPS coordinates"
+    },
+    "nearby_places": {
+      "type": "array",
+      "items": "string",
+      "description": "List of nearby places"
+    },
+    "created_at": {
+      "type": "date",
+      "description": "Creation timestamp"
+    },
+    "updated_at": {
+      "type": "date",
+      "description": "Last update timestamp"
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["name"],
+      "unique": false
+    },
+    {
+      "fields": ["district"]
+    },
+    {
+      "fields": ["category"]
+    }
+  ]
+}
+

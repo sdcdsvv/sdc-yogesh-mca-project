@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile - Alumni Event Scheduler{% endblock %}
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 py-8">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-4">
+                Edit Profile
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Update your profile information to help fellow alumni connect with you.
+            </p>
+        </div>
+
+        <!-- Profile Form -->
+        <div class="card-enhanced p-8">
+            <form method="POST" enctype="multipart/form-data" class="space-y-8" id="profileForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <!-- Basic Information Section -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-gray-800 border-b border-gray-200 pb-2">
+                        <i class="fas fa-user mr-2 text-purple-500"></i>Basic Information
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Name -->
+                        <div class="space-y-2">
+                            <label for="name" class="block text-sm font-semibold text-gray-700">
+                                <i class="fas fa-user mr-2 text-purple-500"></i>Full Name *
+                            </label>
+                            <input type="text" 
+                                   name="name" 
+                                   id="name" 
+                                   value="{{ user.name or '' }}"
+                                   class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                                   placeholder="Enter your full name"
+                                   required>
+                        </div>
+
+                        <!-- Email (readonly) -->
+                        <div class="space-y-2">
+                            <label for="email" class="block text-sm font-semibold text-gray-700">
+                                <i class="fas fa-envelope mr-2 text-purple-500"></i>Email Address
+                            </label>
+                            <input type="email" 
+                                   value="{{ user.email or '' }}"
+                                   class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-100 cursor-not-allowed"
+                                   readonly>
+                            <p class="text-xs text-gray-500">Email cannot be changed. Contact admin if needed.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Phone -->
+                        <div class="space-y-2">
+                            <label for="phone" class="block text-sm font-semibold text-gray-700">
+                                <i class="fas fa-phone mr-2 text-purple-500"></i>Phone Number
+                            </label>
+                            <input type="tel" 
+                                   name="phone" 
+                                   id="phone" 
+                                   value="{{ user.phone or '' }}"
+                                   class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                                   placeholder="Enter your phone number">
+                        </div>
+
+                        <!-- Graduation Year -->
+                        <div class="space-y-2">
+                            <label for="grad_year" class="block text-sm font-semibold text-gray-700">
+                                <i class="fas fa-graduation-cap mr-2 text-purple-500"></i>Graduation Year
+                                {% if not get_current_user().is_admin %} *{% endif %}
+                            </label>
+                            <input type="number" 
+                                   name="grad_year" 
+                                   id="grad_year" 
+                                   value="{{ user.grad_year or '' }}"
+                                   min="1950" 
+                                   max="2030"
+                                   class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                                   placeholder="Enter graduation year (optional for admin)"
+                                   {% if not get_current_user().is_admin %}required{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- Profile Picture -->
+                    <div class="space-y-2">
+                        <label for="profile_picture" class="block text-sm font-semibold text-gray-700">
+                            <i class="fas fa-camera mr-2 text-purple-500"></i>Profile Picture
+                        </label>
+                        <div class="flex items-center space-x-4">
+                            {% if user.profile_picture %}
+                            <img src="{{ url_for('static', filename=user.profile_picture) }}" 
+                                 alt="Current profile picture"
+                                 class="w-16 h-16 rounded-full object-cover border-2 border-gray-300">
+                            {% else %}
+                            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                                {{ user.name[0].upper() if user.name else 'U' }}
+                            </div>
+                            {% endif %}
+                            <div class="flex-1">
+                                <input type="file" 
+                                       name="profile_picture" 
+                                       id="profile_picture" 
+                                       accept="image/*"
+                                       class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300">
+                                <p class="text-xs text-gray-500 mt-1">JPG, PNG, GIF up to 5MB</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Information Section -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-gray-800 border-b border-gray-200 pb-2">
+                        <i class="fas fa-briefcase mr-2 text-purple-500"></i>Professional Information
+                    </h3>
+                    
+                    <!-- Bio -->
+                    <div class="space-y-2">
+                        <label for="bio" class="block text-sm font-semibold text-gray-700">
+                            <i class="fas fa-file-alt mr-2 text-purple-500"></i>Bio
+                        </label>
+                        <textarea name="bio" 
+                                  id="bio" 
+                                  rows="4"
+                                  class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 resize-vertical"
+                                  placeholder="Tell us about yourself, your career, and interests...">{{ user.bio or '' }}</textarea>
+                        <div class="flex justify-between text-sm text-gray-500">
+                            <span>Help others learn about you and your background</span>
+                            <span id="bio-count">{{ (user.bio or '')|length }} characters</span>
+                        </div>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="space-y-2">
+                        <label for="skills" class="block text-sm font-semibold text-gray-700">
+                            <i class="fas fa-tools mr-2 text-purple-500"></i>Skills
+                        </label>
+                        <input type="text" 
+                               name="skills" 
+                               id="skills" 
+                               value="{{ user.skills|join(', ') if user.skills else '' }}"
+                               class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                               placeholder="e.g., Python, Project Management, Marketing, Design">
+                        <p class="text-xs text-gray-500">Separate skills with commas</p>
+                    </div>
+
+                    <!-- Interests -->
+                    <div class="space-y-2">
+                        <label for="interests" class="block text-sm font-semibold text-gray-700">
+                            <i class="fas fa-heart mr-2 text-purple-500"></i>Interests
+                        </label>
+                        <input type="text" 
+                               name="interests" 
+                               id="interests" 
+                               value="{{ user.interests|join(', ') if user.interests else '' }}"
+                               class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                               placeholder="e.g., Photography, Hiking, Technology, Travel">
+                        <p class="text-xs text-gray-500">Separate interests with commas</p>
+                    </div>
+                </div>
+
+                <!-- Social Links Section -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-gray-800 border-b border-gray-200 pb-2">
+                        <i class="fas fa-share-alt mr-2 text-purple-500"></i>Social Links
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- LinkedIn -->
+                        <div class="space-y-2">
+                            <label for="linkedin" class="block text-sm font-semibold text-gray-700">
+                                <i class="fab fa-linkedin mr-2 text-blue-600"></i>LinkedIn
+                            </label>
+                            <input type="url" 
+                                   name="linkedin" 
+                                   id="linkedin" 
+                                   value="{{ user.social_links.linkedin if user.social_links else '' }}"
+                                   class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                                   placeholder="https://linkedin.com/in/yourprofile">
+                        </div>
+
+                        <!-- Twitter -->
+                        <div class="space-y-2">
+                            <label for="twitter" class="block text-sm font-semibold text-gray-700">
+                                <i class="fab fa-twitter mr-2 text-blue-400"></i>Twitter
+                            </label>
+                            <input type="url" 
+                                   name="twitter" 
+                                   id="twitter" 
+                                   value="{{ user.social_links.twitter if user.social_links else '' }}"
+                                   class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                                   placeholder="https://twitter.com/yourhandle">
+                        </div>
+
+                        <!-- GitHub -->
+                        <div class="space-y-2">
+                            <label for="github" class="block text-sm font-semibold text-gray-700">
+                                <i class="fab fa-github mr-2 text-gray-600"></i>GitHub
+                            </label>
+                            <input type="url" 
+                                   name="github" 
+                                   id="github" 
+                                   value="{{ user.social_links.github if user.social_links else '' }}"
+                                   class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+                                   placeholder="https://github.com/yourusername">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Settings Section -->
+                <div class="space-y-6">
+                    <h3 class="text-2xl font-bold text-gray-800 border-b border-gray-200 pb-2">
+                        <i class="fas fa-shield-alt mr-2 text-purple-500"></i>Privacy Settings
+                    </h3>
+                    
+                    <div class="space-y-2">
+                        <label for="profile_privacy" class="block text-sm font-semibold text-gray-700">
+                            <i class="fas fa-eye mr-2 text-purple-500"></i>Profile Visibility
+                        </label>
+                        <select name="profile_privacy" 
+                                id="profile_privacy" 
+                                class="input-modern w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300">
+                            <option value="alumni_only" {% if user.profile_privacy == 'alumni_only' %}selected{% endif %}>Visible to Alumni Only</option>
+                            <option value="public" {% if user.profile_privacy == 'public' %}selected{% endif %}>Public (Everyone)</option>
+                            <option value="private" {% if user.profile_privacy == 'private' %}selected{% endif %}>Private (Only Me)</option>
+                        </select>
+                        <p class="text-xs text-gray-500">Control who can see your profile in the alumni directory</p>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-center space-x-4 pt-6 border-t border-gray-200">
+                    <a href="{{ url_for('profile') }}" 
+                       class="btn-secondary px-8 py-3 rounded-xl font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300">
+                        <i class="fas fa-times mr-2"></i>Cancel
+                    </a>
+                    <button type="submit" 
+                            class="btn-primary px-8 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
+                        <i class="fas fa-save mr-2"></i>
+                        <span id="submitText">Save Changes</span>
+                        <i class="fas fa-spinner fa-spin ml-2 hidden" id="submitSpinner"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Enhanced form validation and interactions
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('profileForm');
+    const bioInput = document.getElementById('bio');
+    const bioCount = document.getElementById('bio-count');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+
+    // Bio character count
+    bioInput.addEventListener('input', function() {
+        bioCount.textContent = `${this.value.length} characters`;
+    });
+
+    // Form submission with loading state
+    form.addEventListener('submit', function(e) {
+        // Show loading state
+        submitBtn.disabled = true;
+        submitText.textContent = 'Saving Changes...';
+        submitSpinner.classList.remove('hidden');
+    });
+
+    // Profile picture preview
+    const profilePictureInput = document.getElementById('profile_picture');
+    profilePictureInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.querySelector('img[alt="Current profile picture"]') || 
+                              document.querySelector('.w-16.h-16.bg-gradient-to-r');
+                if (preview) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('bg-gradient-to-r', 'from-purple-500', 'to-blue-500', 'text-white', 'text-xl', 'font-bold');
+                    preview.classList.add('object-cover', 'border-2', 'border-gray-300');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // URL validation
+    const urlInputs = ['linkedin', 'twitter', 'github'];
+    urlInputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        input.addEventListener('blur', function() {
+            const value = this.value;
+            if (value && !/^https?:\/\/.+/.test(value)) {
+                this.classList.add('border-red-500');
+                this.classList.remove('border-gray-300');
+            } else {
+                this.classList.remove('border-red-500');
+                this.classList.add('border-gray-300');
+            }
+        });
+    });
+
+    // Skills and interests auto-complete (basic)
+    const skillsInput = document.getElementById('skills');
+    const interestsInput = document.getElementById('interests');
+    
+    [skillsInput, interestsInput].forEach(input => {
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const value = this.value.trim();
+                if (value && !value.endsWith(',')) {
+                    this.value = value + ', ';
+                }
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

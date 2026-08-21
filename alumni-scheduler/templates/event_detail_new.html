@@ -1,0 +1,233 @@
+{% extends "base.html" %}
+{% block title %}{{ event.title }} - Alumni Event Scheduler{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <!-- Event Header -->
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+        <!-- Event Image/Header -->
+        <div class="h-64 bg-gradient-to-r from-blue-600 to-blue-800 text-white flex items-center justify-center">
+            <div class="text-center">
+                <i class="fas fa-calendar text-6xl mb-4"></i>
+                <h1 class="text-4xl font-bold">{{ event.title }}</h1>
+                <p class="text-xl text-blue-100 mt-2">{{ event.category or 'General' }}</p>
+            </div>
+        </div>
+
+        <div class="p-8">
+            <!-- Event Details -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Content -->
+                <div class="lg:col-span-2">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-4">Event Details</h2>
+                        <p class="text-gray-700 leading-relaxed">{{ event.description }}</p>
+                    </div>
+
+                    <!-- Event Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-calendar text-blue-600 text-xl mr-3 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Date & Time</h3>
+                                <p class="text-gray-600">{{ event.date.strftime('%A, %B %d, %Y at %I:%M %p') }}</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-blue-600 text-xl mr-3 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Location</h3>
+                                <p class="text-gray-600">{{ event.location }}</p>
+                                {% if event.venue.name %}
+                                    <p class="text-sm text-gray-500">{{ event.venue.name }}</p>
+                                {% endif %}
+                                {% if event.venue.address %}
+                                    <p class="text-sm text-gray-500">{{ event.venue.address }}</p>
+                                {% endif %}
+                                {% if event.venue.phone %}
+                                    <p class="text-sm text-gray-500">{{ event.venue.phone }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <i class="fas fa-users text-blue-600 text-xl mr-3 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Capacity</h3>
+                                <p class="text-gray-600">{{ rsvp_stats.total_guests }} / {{ event.capacity }} attendees</p>
+                                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                                    <div class="bg-blue-600 h-2 rounded-full" style="width: {{ ((rsvp_stats.total_guests / event.capacity * 100) | round(1)) | int }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <i class="fas fa-tags text-blue-600 text-xl mr-3 mt-1"></i>
+                            <div>
+                                <h3 class="font-semibold text-gray-800">Tags</h3>
+                                {% if event.tags %}
+                                    <div class="flex flex-wrap gap-1 mt-1">
+                                        {% for tag in event.tags %}
+                                            <span class="bg-gray-100 text-gray-700 text-xs px-2 py-1 rounded">#{{ tag }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p class="text-gray-500 text-sm">No tags</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assigned Alumni Section -->
+                    {% if assigned_alumni %}
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">
+                            <i class="fas fa-user-check mr-2"></i>Assigned Alumni
+                        </h3>
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <p class="text-sm text-blue-800 mb-3">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                This event has been specifically assigned to the following alumni:
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {% for alumni in assigned_alumni %}
+                                <div class="flex items-center bg-white rounded-lg p-3 shadow-sm">
+                                    <div class="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                        <i class="fas fa-user text-blue-600"></i>
+                                    </div>
+                                    <div>
+                                        <p class="font-medium text-gray-900">{{ alumni.name }}</p>
+                                        <p class="text-sm text-gray-600">{{ alumni.email }}</p>
+                                        {% if alumni.grad_year %}
+                                            <p class="text-xs text-gray-500">Class of {{ alumni.grad_year }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Attachments -->
+                    {% if event.attachments %}
+                    <div class="mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">
+                            <i class="fas fa-paperclip mr-2"></i>Attachments
+                        </h3>
+                        <div class="space-y-2">
+                            {% for attachment in event.attachments %}
+                                <a href="{{ url_for('static', filename=attachment.file_path) }}" target="_blank" 
+                                   class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                    <i class="fas fa-file mr-3 text-blue-600"></i>
+                                    <span class="text-gray-700">{{ attachment.filename }}</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- RSVP Section -->
+                <div class="lg:col-span-1">
+                    <div class="bg-gray-50 rounded-lg p-6 sticky top-4">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-calendar-check mr-2"></i>RSVP
+                        </h3>
+
+                        <!-- RSVP Statistics -->
+                        <div class="mb-6">
+                            <div class="grid grid-cols-3 gap-2 text-center">
+                                <div class="bg-green-100 p-3 rounded-lg">
+                                    <div class="text-2xl font-bold text-green-600">{{ rsvp_stats.yes }}</div>
+                                    <div class="text-xs text-green-700">Yes</div>
+                                </div>
+                                <div class="bg-red-100 p-3 rounded-lg">
+                                    <div class="text-2xl font-bold text-red-600">{{ rsvp_stats.no }}</div>
+                                    <div class="text-xs text-red-700">No</div>
+                                </div>
+                                <div class="bg-yellow-100 p-3 rounded-lg">
+                                    <div class="text-2xl font-bold text-yellow-600">{{ rsvp_stats.maybe }}</div>
+                                    <div class="text-xs text-yellow-700">Maybe</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RSVP Form -->
+                        <form method="POST" action="{{ url_for('rsvp', event_id=event._id) }}" class="space-y-4">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <div>
+                                <label for="status" class="block text-sm font-medium text-gray-700 mb-2">Will you attend?</label>
+                                <select name="status" id="status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                                    <option value="">Select your response</option>
+                                    <option value="Yes" {% if user_rsvp and user_rsvp.status == 'Yes' %}selected{% endif %}>Yes, I'll be there!</option>
+                                    <option value="No" {% if user_rsvp and user_rsvp.status == 'No' %}selected{% endif %}>No, I can't make it</option>
+                                    <option value="Maybe" {% if user_rsvp and user_rsvp.status == 'Maybe' %}selected{% endif %}>Maybe, I'll let you know</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="guest_count" class="block text-sm font-medium text-gray-700 mb-2">Number of Guests</label>
+                                <input type="number" name="guest_count" id="guest_count" min="1" max="10" 
+                                       value="{{ user_rsvp.guest_count if user_rsvp else 1 }}" 
+                                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+
+                            <div>
+                                <label for="dietary_restrictions" class="block text-sm font-medium text-gray-700 mb-2">Dietary Restrictions</label>
+                                <textarea name="dietary_restrictions" id="dietary_restrictions" rows="2" 
+                                          placeholder="Any dietary restrictions or allergies?"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ user_rsvp.dietary_restrictions if user_rsvp else '' }}</textarea>
+                            </div>
+
+                            <div>
+                                <label for="comments" class="block text-sm font-medium text-gray-700 mb-2">Comments</label>
+                                <textarea name="comments" id="comments" rows="2" 
+                                          placeholder="Any additional comments or questions?"
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ user_rsvp.comments if user_rsvp else '' }}</textarea>
+                            </div>
+
+                            <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium transition-colors">
+                                <i class="fas fa-check mr-2"></i>
+                                {% if user_rsvp %}Update RSVP{% else %}Submit RSVP{% endif %}
+                            </button>
+                        </form>
+
+                        <!-- Current RSVP Status -->
+                        {% if user_rsvp %}
+                        <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                            <p class="text-sm text-blue-800">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Your current RSVP: <strong>{{ user_rsvp.status }}</strong>
+                                {% if user_rsvp.guest_count > 1 %}
+                                    ({{ user_rsvp.guest_count }} guests)
+                                {% endif %}
+                            </p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Actions -->
+    {% if current_user.is_admin %}
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Admin Actions</h3>
+        <div class="flex flex-wrap gap-4">
+            <a href="{{ url_for('edit_event', event_id=event._id) }}" class="bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors">
+                <i class="fas fa-edit mr-2"></i>Edit Event
+            </a>
+            <form method="POST" action="{{ url_for('delete_event', event_id=event._id) }}" class="inline">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <button type="submit" onclick="return confirm('Are you sure you want to delete this event?')" 
+                        class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                    <i class="fas fa-trash mr-2"></i>Delete Event
+                </button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

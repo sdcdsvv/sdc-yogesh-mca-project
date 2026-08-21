@@ -1,0 +1,113 @@
+/* Uttarakhand Natural Color Palette */
+:root {
+  /* Primary Colors - Mountain & Forest */
+  --emerald-deep: #065f46;
+  --pine-green: #14532d;
+  --forest-dark: #1a2f26;
+  --mountain-slate: #475569;
+  --sky-blue: #0c4a6e;
+  
+  /* Earth Tones */
+  --earth-brown: #78350f;
+  --clay-brown: #92400e;
+  --stone-gray: #57534e;
+  --slate-gray: #334155;
+  
+  /* Soft Neutrals */
+  --soft-white: #fafaf9;
+  --cream: #f5f5f4;
+  --light-stone: #e7e5e4;
+  --warm-gray: #d6d3d1;
+  
+  /* Accent Colors - Subtle */
+  --temple-gold: #a16207;
+  --river-teal: #0f766e;
+  --meadow-green: #15803d;
+  --sunset-amber: #b45309;
+  
+  /* Text Colors */
+  --text-primary: #1c1917;
+  --text-secondary: #44403c;
+  --text-muted: #78716c;
+}
+
+/* Smooth Transitions */
+* {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--light-beige);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--slate-green);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--pine-green);
+}
+
+/* Gradient Overlays */
+.gradient-overlay-mountain {
+  background: linear-gradient(135deg, rgba(91, 124, 153, 0.9) 0%, rgba(74, 95, 90, 0.9) 100%);
+}
+
+.gradient-overlay-forest {
+  background: linear-gradient(135deg, rgba(45, 74, 62, 0.9) 0%, rgba(26, 47, 38, 0.9) 100%);
+}
+
+.gradient-overlay-temple {
+  background: linear-gradient(135deg, rgba(201, 169, 97, 0.85) 0%, rgba(139, 115, 85, 0.85) 100%);
+}
+
+/* Subtle Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Traditional Pahadi Pattern */
+.pahadi-pattern {
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(74, 95, 90, 0.03) 10px, rgba(74, 95, 90, 0.03) 20px),
+    repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(91, 124, 153, 0.03) 10px, rgba(91, 124, 153, 0.03) 20px);
+}
+
+/* Mountain Silhouette Pattern */
+.mountain-silhouette {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120'%3E%3Cpath d='M0,60 L150,20 L300,50 L450,10 L600,40 L750,25 L900,45 L1050,30 L1200,50 L1200,120 L0,120 Z' fill='%234a5f5a' opacity='0.1'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: bottom;
+  background-size: 1200px 60px;
+}

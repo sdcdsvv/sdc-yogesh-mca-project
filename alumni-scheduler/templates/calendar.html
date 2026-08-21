@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}Event Calendar - Alumni Event Scheduler{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg">
+        <div class="p-6 border-b border-gray-200">
+            <h1 class="text-2xl font-bold text-gray-800 flex items-center">
+                <i class="fas fa-calendar-alt text-blue-600 mr-2"></i>
+                Event Calendar
+            </h1>
+            <p class="text-gray-600 mt-2">View all events in calendar format</p>
+        </div>
+        
+        <div class="p-6">
+            <!-- Calendar Navigation -->
+            <div class="flex justify-between items-center mb-6">
+                <a href="{{ url_for('calendar_view', year=prev_month[0], month=prev_month[1]) }}" 
+                   class="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                    <i class="fas fa-chevron-left mr-2"></i>
+                    Previous
+                </a>
+                
+                <h2 id="current-month" class="text-xl font-semibold text-gray-800">
+                    {{ now.strftime('%B %Y') }}
+                </h2>
+                
+                <a href="{{ url_for('calendar_view', year=next_month[0], month=next_month[1]) }}" 
+                   class="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                    Next
+                    <i class="fas fa-chevron-right ml-2"></i>
+                </a>
+            </div>
+
+            <!-- Calendar Grid -->
+            <div class="grid grid-cols-7 gap-1 mb-4">
+                {% for day in ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"] %}
+                <div class="p-3 text-center font-semibold text-gray-600 bg-gray-50 rounded">{{ day }}</div>
+                {% endfor %}
+            </div>
+
+            <div id="calendar-grid" class="grid grid-cols-7 gap-1">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Modal -->
+    <div id="event-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-md w-full p-6 relative">
+                <button onclick="closeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+                <h3 id="modal-title" class="text-lg font-semibold text-gray-800 mb-4"></h3>
+                <div id="modal-content" class="text-gray-600"></div>
+                <div class="mt-6 flex justify-end">
+                    <button onclick="closeModal()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Events from Flask (must be valid JSON)
+const events = {{ events | tojson | safe }};
+let currentDate = new Date({{ now.year }}, {{ now.month - 1 }}, {{ now.day }});
+
+function renderCalendar() {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startDay = firstDay.getDay();
+
+    const grid = document.getElementById("calendar-grid");
+    grid.innerHTML = "";
+
+    // Empty slots
+    for (let i = 0; i < startDay; i++) {
+        grid.innerHTML += `<div class="h-24 p-2 border border-gray-200 bg-gray-50"></div>`;
+    }
+
+    // Days
+    for (let day = 1; day <= daysInMonth; day++) {
+        const cell = document.createElement("div");
+        cell.className = "h-24 p-2 border border-gray-200 hover:bg-gray-50 cursor-pointer relative";
+        cell.innerHTML = `<div class="font-semibold text-gray-800">${day}</div>`;
+
+        // Events of this day
+        const todaysEvents = events.filter(ev => {
+            const d = new Date(ev.date);
+            return d.getDate() === day && d.getMonth() === month && d.getFullYear() === year;
+        });
+
+        todaysEvents.forEach(ev => {
+            const tag = document.createElement("div");
+            tag.className = "text-xs bg-blue-100 text-blue-800 rounded px-1 py-0.5 mb-1 truncate";
+            tag.textContent = ev.title;
+            tag.onclick = e => { e.stopPropagation(); showEventModal(ev); };
+            cell.appendChild(tag);
+        });
+
+        // Highlight today
+        const today = new Date();
+        if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+            cell.classList.add("bg-blue-50", "border-blue-400");
+        }
+
+        grid.appendChild(cell);
+    }
+}
+
+function showEventModal(ev) {
+    document.getElementById("modal-title").textContent = ev.title;
+    document.getElementById("modal-content").innerHTML = `
+        <p><strong>Date:</strong> ${new Date(ev.date).toLocaleString()}</p>
+        <p><strong>Location:</strong> ${ev.location}</p>
+        <p><strong>Category:</strong> ${ev.category}</p>
+        <p><strong>Description:</strong> ${ev.description}</p>
+        <div class="pt-4">
+            <a href="/event/${ev._id}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">View Details</a>
+        </div>
+    `;
+    document.getElementById("event-modal").classList.remove("hidden");
+}
+
+// Close modal
+function closeModal() {
+    document.getElementById("event-modal").classList.add("hidden");
+}
+// Also close when clicking backdrop
+document.getElementById("event-modal").addEventListener("click", e => {
+    if (e.target.id === "event-modal") closeModal();
+});
+
+renderCalendar();
+</script>
+{% endblock %}

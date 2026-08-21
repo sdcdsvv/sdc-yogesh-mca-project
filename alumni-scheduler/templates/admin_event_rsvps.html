@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}Event RSVPs - {{ event.title }} - Alumni Event Scheduler{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white shadow rounded-lg mb-6">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">{{ event.title }}</h1>
+                    <p class="text-gray-600">{{ event.date.strftime('%A, %B %d, %Y at %I:%M %p') }}</p>
+                </div>
+                <div class="flex space-x-3">
+                    <a href="{{ url_for('admin_events') }}" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Events
+                    </a>
+                    <a href="{{ url_for('export_event_rsvps', event_id=event._id) }}" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-download mr-2"></i>Export CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RSVP Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+        <div class="bg-white p-6 rounded-lg shadow">
+            <div class="flex items-center">
+                <div class="p-2 bg-green-100 rounded-lg">
+                    <i class="fas fa-check text-green-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Going</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ rsvp_details | selectattr('rsvp.status', 'equalto', 'Yes') | list | length }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow">
+            <div class="flex items-center">
+                <div class="p-2 bg-red-100 rounded-lg">
+                    <i class="fas fa-times text-red-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Not Going</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ rsvp_details | selectattr('rsvp.status', 'equalto', 'No') | list | length }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow">
+            <div class="flex items-center">
+                <div class="p-2 bg-yellow-100 rounded-lg">
+                    <i class="fas fa-question text-yellow-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Maybe</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ rsvp_details | selectattr('rsvp.status', 'equalto', 'Maybe') | list | length }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow">
+            <div class="flex items-center">
+                <div class="p-2 bg-blue-100 rounded-lg">
+                    <i class="fas fa-users text-blue-600 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Guests</p>
+                    <p class="text-2xl font-bold text-gray-900">{{ rsvp_details | sum(attribute='rsvp.guest_count') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RSVP List -->
+    <div class="bg-white shadow rounded-lg">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-900">RSVP Details</h2>
+        </div>
+        
+        {% if rsvp_details %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guests</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dietary</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Comments</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RSVP Date</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for item in rsvp_details %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 flex-shrink-0">
+                                    <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                                        <i class="fas fa-user text-gray-600"></i>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">{{ item.user.name }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.user.email }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.user.phone or 'N/A' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            {% if item.rsvp.status == 'Yes' %}
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                    <i class="fas fa-check mr-1"></i>Going
+                                </span>
+                            {% elif item.rsvp.status == 'No' %}
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                    <i class="fas fa-times mr-1"></i>Not Going
+                                </span>
+                            {% else %}
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                    <i class="fas fa-question mr-1"></i>Maybe
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ item.rsvp.guest_count or 1 }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{{ item.rsvp.dietary_restrictions or 'None' }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{{ item.rsvp.comments or 'None' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ item.rsvp.rsvp_date.strftime('%m/%d/%Y %I:%M %p') if item.rsvp.rsvp_date else 'N/A' }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-12">
+            <i class="fas fa-calendar-times text-4xl text-gray-400 mb-4"></i>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No RSVPs yet</h3>
+            <p class="text-gray-500">No one has RSVP'd to this event yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

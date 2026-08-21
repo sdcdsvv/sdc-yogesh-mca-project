@@ -1,0 +1,546 @@
+{% extends "base.html" %}
+{% block title %}Admin Settings - Alumni Event Scheduler{% endblock %}
+{% block content %}
+<style>
+    :root {
+        --primary: #4361ee;
+        --primary-light: #eef2ff;
+        --secondary: #3f37c9;
+        --success: #4cc9f0;
+        --info: #4895ef;
+        --warning: #f72585;
+        --danger: #e63946;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --gray: #6c757d;
+        --light-gray: #e9ecef;
+        --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        --hover-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .settings-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .header {
+        background: linear-gradient(120deg, var(--primary), var(--secondary));
+        color: white;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: var(--card-shadow);
+    }
+
+    .header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+    }
+
+    .header h1 i {
+        margin-right: 12px;
+        font-size: 32px;
+    }
+
+    .header p {
+        opacity: 0.9;
+        font-size: 16px;
+    }
+
+    .settings-form {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .settings-card {
+        background: white;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: var(--card-shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .settings-card:hover {
+        box-shadow: var(--hover-shadow);
+    }
+
+    .card-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--light-gray);
+        background: var(--primary-light);
+    }
+
+    .card-header h2 {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+    }
+
+    .card-header h2 i {
+        margin-right: 10px;
+    }
+
+    .card-body {
+        padding: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: var(--dark);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--light-gray);
+        border-radius: 10px;
+        font-size: 15px;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        border-radius: 8px;
+        background: var(--light);
+        transition: all 0.2s ease;
+    }
+
+    .checkbox-item:hover {
+        background: var(--primary-light);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        margin-right: 12px;
+        accent-color: var(--primary);
+    }
+
+    .checkbox-item label {
+        margin: 0;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .save-button {
+        background: linear-gradient(120deg, var(--primary), var(--secondary));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 14px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        margin-left: auto;
+    }
+
+    .save-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+    }
+
+    .save-button i {
+        margin-right: 8px;
+    }
+
+    .form-hint {
+        font-size: 13px;
+        color: var(--gray);
+        margin-top: 6px;
+    }
+
+    .settings-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 24px;
+        overflow-x: auto;
+        padding-bottom: 5px;
+    }
+
+    .settings-tab {
+        padding: 12px 20px;
+        background: white;
+        border-radius: 10px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        box-shadow: var(--card-shadow);
+    }
+
+    .settings-tab.active {
+        background: var(--primary);
+        color: white;
+    }
+
+    .settings-tab:hover:not(.active) {
+        background: var(--primary-light);
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .password-strength {
+        height: 6px;
+        background: var(--light-gray);
+        border-radius: 3px;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+
+    .password-strength-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    .password-strength-weak {
+        background: var(--danger);
+        width: 33%;
+    }
+
+    .password-strength-medium {
+        background: var(--warning);
+        width: 66%;
+    }
+
+    .password-strength-strong {
+        background: var(--success);
+        width: 100%;
+    }
+
+    @media (max-width: 768px) {
+        .settings-container {
+            padding: 15px;
+        }
+        
+        .header {
+            padding: 20px;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .checkbox-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .settings-tabs {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+        }
+    }
+</style>
+
+<div class="settings-container">
+    <!-- Header -->
+    <div class="header">
+        <h1><i class="fas fa-cog"></i> Admin Settings</h1>
+        <p>Configure system settings and preferences</p>
+    </div>
+
+    <!-- Settings Tabs -->
+    <div class="settings-tabs">
+        <div class="settings-tab active" data-tab="general">
+            <i class="fas fa-sliders-h mr-2"></i>General
+        </div>
+        <div class="settings-tab" data-tab="email">
+            <i class="fas fa-envelope mr-2"></i>Email
+        </div>
+        <div class="settings-tab" data-tab="features">
+            <i class="fas fa-flag mr-2"></i>Features
+        </div>
+        <div class="settings-tab" data-tab="security">
+            <i class="fas fa-shield-alt mr-2"></i>Security
+        </div>
+    </div>
+
+    <form method="POST" class="settings-form">
+        <!-- General Settings -->
+        <div class="tab-content active" id="general-tab">
+            <div class="settings-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-sliders-h"></i> General Settings</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="app_name">Application Name</label>
+                        <input type="text" name="app_name" id="app_name" value="Alumni Event Scheduler" class="form-control">
+                        <div class="form-hint">This name will appear throughout the application</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin_email">Admin Email</label>
+                        <input type="email" name="admin_email" id="admin_email" value="admin@alumni-scheduler.com" class="form-control">
+                        <div class="form-hint">System notifications will be sent to this address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timezone">Default Timezone</label>
+                        <select name="timezone" id="timezone" class="form-control">
+                            <option value="UTC">UTC</option>
+                            <option value="America/New_York" selected>Eastern Time</option>
+                            <option value="America/Chicago">Central Time</option>
+                            <option value="America/Denver">Mountain Time</option>
+                            <option value="America/Los_Angeles">Pacific Time</option>
+                        </select>
+                        <div class="form-hint">All times will be displayed in this timezone</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Settings -->
+        <div class="tab-content" id="email-tab">
+            <div class="settings-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-envelope"></i> Email Settings</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="mail_server">SMTP Server</label>
+                        <input type="text" name="mail_server" id="mail_server" value="smtp.gmail.com" class="form-control">
+                    </div>
+                    
+                    <div class="form-group grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="mail_port">Port</label>
+                            <input type="number" name="mail_port" id="mail_port" value="587" class="form-control">
+                        </div>
+                        
+                        <div class="flex items-center justify-start md:justify-end pt-6">
+                            <div class="checkbox-item" style="background: none; padding: 0;">
+                                <input type="checkbox" name="mail_use_tls" id="mail_use_tls" checked>
+                                <label for="mail_use_tls">Use TLS</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mail_username">Username</label>
+                        <input type="email" name="mail_username" id="mail_username" placeholder="your-email@gmail.com" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mail_password">Password</label>
+                        <input type="password" name="mail_password" id="mail_password" placeholder="Enter SMTP password" class="form-control">
+                        <div class="form-hint">Leave blank to keep current password</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="button" class="save-button" style="padding: 10px 20px; font-size: 14px;">
+                            <i class="fas fa-paper-plane"></i> Test Email Configuration
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Flags -->
+        <div class="tab-content" id="features-tab">
+            <div class="settings-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-flag"></i> Feature Flags</h2>
+                </div>
+                <div class="card-body">
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="enable_registration" id="enable_registration" checked>
+                            <label for="enable_registration">Enable User Registration</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="enable_email_notifications" id="enable_email_notifications" checked>
+                            <label for="enable_email_notifications">Enable Email Notifications</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="enable_sms_notifications" id="enable_sms_notifications">
+                            <label for="enable_sms_notifications">Enable SMS Notifications</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="enable_push_notifications" id="enable_push_notifications">
+                            <label for="enable_push_notifications">Enable Push Notifications</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="enable_file_uploads" id="enable_file_uploads" checked>
+                            <label for="enable_file_uploads">Enable File Uploads</label>
+                        </div>
+                        
+                        <div class="checkbox-item">
+                            <input type="checkbox" name="enable_analytics" id="enable_analytics" checked>
+                            <label for="enable_analytics">Enable Analytics</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Settings -->
+        <div class="tab-content" id="security-tab">
+            <div class="settings-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-shield-alt"></i> Security Settings</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="password_min_length">Minimum Password Length</label>
+                        <input type="number" name="password_min_length" id="password_min_length" value="8" min="6" max="20" class="form-control">
+                        <div class="password-strength">
+                            <div class="password-strength-fill password-strength-strong"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Password Requirements</label>
+                        <div class="checkbox-grid">
+                            <div class="checkbox-item">
+                                <input type="checkbox" name="require_uppercase" id="require_uppercase" checked>
+                                <label for="require_uppercase">Require Uppercase Letters</label>
+                            </div>
+                            
+                            <div class="checkbox-item">
+                                <input type="checkbox" name="require_lowercase" id="require_lowercase" checked>
+                                <label for="require_lowercase">Require Lowercase Letters</label>
+                            </div>
+                            
+                            <div class="checkbox-item">
+                                <input type="checkbox" name="require_numbers" id="require_numbers" checked>
+                                <label for="require_numbers">Require Numbers</label>
+                            </div>
+                            
+                            <div class="checkbox-item">
+                                <input type="checkbox" name="require_special" id="require_special" checked>
+                                <label for="require_special">Require Special Characters</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="session_timeout">Session Timeout (minutes)</label>
+                        <input type="number" name="session_timeout" id="session_timeout" value="30" min="5" max="1440" class="form-control">
+                        <div class="form-hint">After this time of inactivity, users will be automatically logged out</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="max_login_attempts">Maximum Login Attempts</label>
+                        <input type="number" name="max_login_attempts" id="max_login_attempts" value="5" min="1" max="10" class="form-control">
+                        <div class="form-hint">After this many failed attempts, the account will be temporarily locked</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div class="flex justify-end mt-4">
+            <button type="submit" class="save-button">
+                <i class="fas fa-save"></i>Save Settings
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab functionality
+        const tabs = document.querySelectorAll('.settings-tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Update active tab
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show active content
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // Password strength indicator
+        const passwordLength = document.getElementById('password_min_length');
+        const strengthIndicator = document.querySelector('.password-strength-fill');
+        
+        if (passwordLength && strengthIndicator) {
+            passwordLength.addEventListener('input', function() {
+                const value = parseInt(this.value);
+                
+                // Remove all strength classes
+                strengthIndicator.classList.remove(
+                    'password-strength-weak', 
+                    'password-strength-medium', 
+                    'password-strength-strong'
+                );
+                
+                // Add appropriate class based on value
+                if (value < 8) {
+                    strengthIndicator.classList.add('password-strength-weak');
+                } else if (value < 12) {
+                    strengthIndicator.classList.add('password-strength-medium');
+                } else {
+                    strengthIndicator.classList.add('password-strength-strong');
+                }
+            });
+        }
+        
+        // Initialize password strength
+        if (passwordLength) {
+            passwordLength.dispatchEvent(new Event('input'));
+        }
+        
+        // Add hover effects to cards
+        document.querySelectorAll('.settings-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-5px)';
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    });
+</script>
+{% endblock %}

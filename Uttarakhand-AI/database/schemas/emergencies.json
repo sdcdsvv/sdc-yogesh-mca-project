@@ -1,0 +1,42 @@
+{
+  "collection": "emergencies",
+  "schema": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "description": "Emergency service name"
+    },
+    "number": {
+      "type": "string",
+      "required": true,
+      "description": "Contact number"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the service"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["police", "ambulance", "fire", "disaster", "helpline", "other"],
+      "description": "Category of emergency service"
+    },
+    "district": {
+      "type": "string",
+      "description": "District name (optional, for district-specific contacts)"
+    },
+    "active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the contact is active"
+    }
+  },
+  "indexes": [
+    {
+      "fields": ["category"]
+    },
+    {
+      "fields": ["district"]
+    }
+  ]
+}
+

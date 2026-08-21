@@ -1,0 +1,348 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard - Alumni Event Scheduler{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">
+            <i class="fas fa-tachometer-alt mr-3 text-blue-600"></i>Admin Dashboard
+        </h1>
+        <p class="text-gray-600">Manage your alumni community and events</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                    <i class="fas fa-users text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Users</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ stats.total_users }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-green-100 text-green-600">
+                    <i class="fas fa-calendar text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Events</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ stats.total_events }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                    <i class="fas fa-calendar-check text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Upcoming Events</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ stats.upcoming_events }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                    <i class="fas fa-check-circle text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total RSVPs</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ stats.total_rsvps }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-indigo-100 text-indigo-600">
+                    <i class="fas fa-user-check text-2xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Active Users</p>
+                    <p class="text-2xl font-semibold text-gray-900">{{ stats.active_users }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                <i class="fas fa-chart-pie mr-2 text-blue-600"></i>Events by Category
+            </h3>
+            <div id="categoryChartContainer" class="h-64 flex items-center justify-center">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                <i class="fas fa-clock mr-2 text-blue-600"></i>Recent Activity
+            </h3>
+            <div class="space-y-4">
+                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                    <div class="p-2 bg-blue-100 rounded-full mr-3">
+                        <i class="fas fa-calendar-plus text-blue-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">New events created</p>
+                        <p class="text-xs text-gray-500">Last 7 days</p>
+                    </div>
+                </div>
+                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                    <div class="p-2 bg-green-100 rounded-full mr-3">
+                        <i class="fas fa-user-plus text-green-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">New user registrations</p>
+                        <p class="text-xs text-gray-500">Last 7 days</p>
+                    </div>
+                </div>
+                <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                    <div class="p-2 bg-yellow-100 rounded-full mr-3">
+                        <i class="fas fa-check-circle text-yellow-600"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-900">RSVPs received</p>
+                        <p class="text-xs text-gray-500">Last 7 days</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Notifications Section -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-800">
+                    <i class="fas fa-bell mr-2 text-blue-600"></i>Recent Notifications
+                </h3>
+                {% if get_notification_count() > 0 %}
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    {{ get_notification_count() }} new
+                </span>
+                {% endif %}
+            </div>
+            
+            {% set admin_notifications = get_unread_notifications() %}
+            {% if admin_notifications %}
+                <div class="space-y-3 max-h-64 overflow-y-auto">
+                    {% for notification in admin_notifications %}
+                    <div class="flex items-start p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer" 
+                         {% if notification.action_url %}onclick="window.location.href='{{ notification.action_url }}'"{% endif %}>
+                        <div class="flex-shrink-0 mr-3">
+                            {% if notification.type == 'rsvp_response' %}
+                                <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-reply text-yellow-600 text-sm"></i>
+                                </div>
+                            {% elif notification.type == 'event_created' %}
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-calendar text-blue-600 text-sm"></i>
+                                </div>
+                            {% elif notification.type == 'job_posted' %}
+                                <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-briefcase text-orange-600 text-sm"></i>
+                                </div>
+                            {% else %}
+                                <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-bell text-gray-600 text-sm"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm font-medium text-gray-900 truncate">{{ notification.title }}</p>
+                            <p class="text-xs text-gray-600 truncate">{{ notification.message }}</p>
+                            <p class="text-xs text-gray-500 mt-1">{{ notification.created_at.strftime('%b %d, %I:%M %p') }}</p>
+                        </div>
+                        {% if not notification.read %}
+                        <div class="flex-shrink-0 ml-2">
+                            <div class="w-2 h-2 bg-blue-600 rounded-full"></div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-4 text-center">
+                    <a href="{{ url_for('user_notifications') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        View All Notifications <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <i class="fas fa-bell-slash text-3xl text-gray-300 mb-2"></i>
+                    <p class="text-gray-500 text-sm">No new notifications</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">
+                    <i class="fas fa-calendar-alt mr-2 text-blue-600"></i>Recent Events
+                </h3>
+            </div>
+            <div class="p-6">
+                {% if recent_events %}
+                    <div class="space-y-4">
+                        {% for event in recent_events %}
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div>
+                                <h4 class="text-sm font-medium text-gray-900">{{ event.title }}</h4>
+                                <p class="text-xs text-gray-500">{{ event.date.strftime('%B %d, %Y') }}</p>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{{ event.category or 'General' }}</span>
+                                <a href="{{ url_for('event_detail', event_id=event._id) }}" class="text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-4 text-center">
+                        <a href="{{ url_for('admin_events') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            View All Events <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-center py-4">No events found</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">
+                    <i class="fas fa-users mr-2 text-blue-600"></i>Recent Users
+                </h3>
+            </div>
+            <div class="p-6">
+                {% if recent_users %}
+                    <div class="space-y-4">
+                        {% for user in recent_users %}
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-user text-blue-600 text-sm"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-900">{{ user.name }}</h4>
+                                    <p class="text-xs text-gray-500">{{ user.email }}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">Class of {{ user.grad_year }}</span>
+                                {% if user.is_admin %}
+                                    <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">Admin</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-4 text-center">
+                        <a href="{{ url_for('admin_users') }}" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                            View All Users <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                {% else %}
+                    <p class="text-gray-500 text-center py-4">No users found</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">
+            <i class="fas fa-bolt mr-2 text-blue-600"></i>Quick Actions
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <a href="{{ url_for('create_event') }}" class="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                <i class="fas fa-calendar-plus text-2xl text-blue-600 mr-4"></i>
+                <div>
+                    <h4 class="font-medium text-gray-900">Create Event</h4>
+                    <p class="text-sm text-gray-600">Add a new alumni event</p>
+                </div>
+            </a>
+
+            <a href="{{ url_for('admin_users') }}" class="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                <i class="fas fa-users text-2xl text-green-600 mr-4"></i>
+                <div>
+                    <h4 class="font-medium text-gray-900">Manage Users</h4>
+                    <p class="text-sm text-gray-600">View and manage alumni</p>
+                </div>
+            </a>
+
+            <a href="{{ url_for('admin_events') }}" class="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                <i class="fas fa-calendar-check text-2xl text-purple-600 mr-4"></i>
+                <div>
+                    <h4 class="font-medium text-gray-900">Manage Events</h4>
+                    <p class="text-sm text-gray-600">Edit and delete events</p>
+                </div>
+            </a>
+
+            <a href="{{ url_for('admin_logout') }}" class="flex items-center p-4 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
+                <i class="fas fa-sign-out-alt text-2xl text-red-600 mr-4"></i>
+                <div>
+                    <h4 class="font-medium text-gray-900">Admin Logout</h4>
+                    <p class="text-sm text-gray-600">Sign out of admin panel</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+// Event Categories Chart
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryData = JSON.parse('{{ category_stats | tojson | safe if category_stats else "[]" }}');
+    
+    // Check if categoryData exists and is not empty
+    if (categoryData && categoryData.length > 0) {
+        const categoryLabels = categoryData.map(item => item._id || 'Unknown');
+        const categoryValues = categoryData.map(item => item.count || 0);
+        
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    data: categoryValues,
+                    backgroundColor: [
+                        '#3B82F6',
+                        '#10B981',
+                        '#F59E0B',
+                        '#EF4444',
+                        '#8B5CF6',
+                        '#06B6D4',
+                        '#84CC16'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    } else {
+        // FIXED: Target the parent container, not the canvas itself.
+        const chartContainer = document.getElementById('categoryChartContainer');
+        if (chartContainer) {
+            chartContainer.innerHTML = '<div class="flex items-center justify-center h-full text-gray-500"><p>No category data available</p></div>';
+        }
+    }
+});
+</script>
+{% endblock %}
